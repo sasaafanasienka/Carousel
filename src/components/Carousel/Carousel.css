@@ -1,0 +1,11 @@
+@import url("./__item/Carousel__item.css");
+@import url("./__arrow/Carousel__arrow.css");
+@import url("./__content/Carousel__content.css");
+
+.Carousel {
+    position: relative;
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-wrap: nowrap;
+}

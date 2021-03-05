@@ -1,0 +1,19 @@
+.Carousel__arrow {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: calc(50% - 20px);
+    background-color: black;
+    border-radius: 50%;
+    border: none;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.Carousel__arrow_left {
+    left: 10px;
+}
+
+.Carousel__arrow_right {
+    right: 10px;
+}
