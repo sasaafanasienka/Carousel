@@ -4,8 +4,10 @@
 
 .Carousel {
     position: relative;
-    width: 100%;
+    width: inherit;
     height: max-content;
     display: flex;
     flex-wrap: nowrap;
+    flex-direction: column;
+    overflow-x: hidden;
 }
