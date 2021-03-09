@@ -47,6 +47,7 @@ function Carousel(props) {
         let direction = event.target.className === 'Carousel__arrow Carousel__arrow_left' ? -1 : 1
         const newPosition = state.rightPositionsArr[state.rightPositionsArr.indexOf(currentPosition) + direction]
         animatedMove(currentPosition, newPosition)
+        savePosition(newPosition)
     }
 
     function saveTouchPoint(event) {
