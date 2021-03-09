@@ -4,6 +4,7 @@ function animatedMove(startPoint, endPoint) {
         const animationFunction = (Math.sin((Math.PI / 2)* -1 + Math.PI * frameNum / 25) + 1) / 2
         const moveDistance = endPoint - startPoint
         document.querySelector('.Carousel__content').style.left = `${startPoint + moveDistance * animationFunction}px`
+        console.log(document.querySelector('.Carousel__content').style.left)
     }
 
     let frameNum = 0
@@ -14,7 +15,7 @@ function animatedMove(startPoint, endPoint) {
             clearInterval(animation)
         }
         animationStep(frameNum, startPoint, endPoint)
-    }, 10);
+    }, 8);
 }
 
 export default animatedMove

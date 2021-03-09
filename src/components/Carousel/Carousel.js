@@ -5,20 +5,18 @@ import animatedMove from "./utilits/animatedMove";
 
 function Carousel(props) {
 
-    const [touchX, setTouchX] = useState(0)
+    const [touchPoint, savePoint] = useState(0)
+    const [currentPosition, savePosition] = useState(0)
     const [state, setState] = useState({
         componentWasMounted: false
     })
-
-    let itemWidth = 0
-    let gap = 0
 
     useEffect(() => {
         if (!state.componentWasMounted) {
             const carouselWidth = document.querySelector('.Carousel').clientWidth
             const itemsOnScreen = props.itemsOnScreen
-            gap = props.gap
-            itemWidth = (carouselWidth - (gap * (itemsOnScreen - 1))) / itemsOnScreen
+            const gap = props.gap
+            const itemWidth = (carouselWidth - (gap * (itemsOnScreen - 1))) / itemsOnScreen
             let gridTemplate = ''
             let itemsQuantity = props.content.length
             for (let i = 0; i < itemsQuantity; i++) {
@@ -51,12 +49,12 @@ function Carousel(props) {
         animatedMove(currentPosition, newPosition)
     }
 
-    function saveTouchX(event) {
-        setTouchX(event.targetTouches[0].clientX)
+    function saveTouchPoint(event) {
+        savePoint(event.targetTouches[0].clientX)
     }
 
     function touchMove(event) {
-        document.querySelector('.Carousel__content').style.left = `${event.targetTouches[0].screenX - touchX}px`
+        document.querySelector('.Carousel__content').style.left = `${currentPosition + event.targetTouches[0].clientX - touchPoint}px`
     }
 
     function positionAdjust(event) {
@@ -78,11 +76,12 @@ function Carousel(props) {
             } 
         })
         animatedMove(currentLeft, rightPositionsArr[deviationsArr.indexOf(minDeviation)])
+        savePosition(rightPositionsArr[deviationsArr.indexOf(minDeviation)])
     }
 
     return(
         <div className='Carousel'>
-            <div className='Carousel__content' onTouchMove={touchMove} onTouchStart={saveTouchX} onTouchEnd={positionAdjust}>
+            <div className='Carousel__content' onTouchMove={touchMove} onTouchStart={saveTouchPoint} onTouchEnd={positionAdjust}>
                 {props.content}     
             </div>
             <button className='Carousel__arrow Carousel__arrow_left' onClick={move}></button>
