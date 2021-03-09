@@ -17,7 +17,7 @@ function App() {
     ]
 
     return (
-        <div className='App' style={{width: '100%'}}>
+        <div className='App'>
             <Carousel
                 content={contentArr}
                 gap={20}

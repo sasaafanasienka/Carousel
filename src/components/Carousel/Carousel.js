@@ -1,101 +1,94 @@
 import React, { Component, useState, useEffect } from "react";
 import './Carousel.css';
 import Car from './Car'
+import animatedMove from "./utilits/animatedMove";
 
 function Carousel(props) {
 
-    function makeContentDOM() {
-        if (props.content.length = props.itemsOnScreen + 2) {
-            return props.content
-        } else {
-            let newContent = []
-            newContent.push(props.content[props.content.length - 1], props.content, props.content[0])
-            return newContent
-        }
-    }
-
+    const [touchX, setTouchX] = useState(0)
     const [state, setState] = useState({
-        first: 0,
-        content: makeContentDOM(),
+        componentWasMounted: false
     })
 
+    let itemWidth = 0
+    let gap = 0
+
     useEffect(() => {
-        if (state.first === 0) {
-            console.log(document.querySelector('.Carousel').offsetParent.clientWidth)
-            const screenWidth = document.querySelector('.Carousel').clientWidth;
+        if (!state.componentWasMounted) {
+            const carouselWidth = document.querySelector('.Carousel').clientWidth
             const itemsOnScreen = props.itemsOnScreen
-            const itemWidth = (screenWidth - (props.gap * (itemsOnScreen - 1))) / itemsOnScreen
+            gap = props.gap
+            itemWidth = (carouselWidth - (gap * (itemsOnScreen - 1))) / itemsOnScreen
             let gridTemplate = ''
-            let itemsQuantity = state.content.length < (props.itemsOnScreen + 2) ? state.content.length + 2 : state.content.length
-            console.log(itemsQuantity)
+            let itemsQuantity = props.content.length
             for (let i = 0; i < itemsQuantity; i++) {
                 gridTemplate = gridTemplate.concat(`${itemWidth}px `)
             }
+            const rightPositionsArr = []
+            for (let i = itemsQuantity - itemsOnScreen; i >= 0; i--) {
+                rightPositionsArr.push(-i * (itemWidth + gap))
+            }
+            document.querySelector('.Carousel__content').style.left = '0px'
+            document.querySelector('.Carousel__content').style.gap = `0px ${props.gap}px`
+            document.querySelector('.Carousel__content').style.gridTemplateColumns = gridTemplate
             setState({
-                first: 1,
-                content: state.content,
-                gridTemplateColumns: gridTemplate,
-                itemWidth: itemWidth
+                componentWasMounted: true,
+                carouselWidth: carouselWidth,
+                itemsOnScreen: itemsOnScreen,
+                itemsQuantity: itemsQuantity,
+                rightPositionsArr: rightPositionsArr,
+                gap: gap,
+                itemWidth: itemWidth,
+                gridTEmplate: gridTemplate,
             })
         }
     });
 
-    function movecarousel(event) {
-        function animationStep(frameNum, direction) {
-            let animationFunction = (Math.sin((Math.PI / 2)* -1 + Math.PI * frameNum / 25) + 1) / 2
-            document.querySelector('.Carousel__content').style.left = `${animationFunction * (state.itemWidth + props.gap) * direction}px`
-        }
+    function move(event) {
+        const currentPosition = Number(document.querySelector('.Carousel__content').style.left.slice(0, -2))
+        let direction = event.target.className === 'Carousel__arrow Carousel__arrow_left' ? -1 : 1
+        const newPosition = state.rightPositionsArr[state.rightPositionsArr.indexOf(currentPosition) + direction]
+        animatedMove(currentPosition, newPosition)
+    }
 
-        let direction = 0
-        event.target.className === 'Carousel__arrow Carousel__arrow_left' ? direction = -1 : direction = 1
-        let frameNum = 0
+    function saveTouchX(event) {
+        setTouchX(event.targetTouches[0].clientX)
+    }
 
-        let animation = setInterval(() => {
-            frameNum = frameNum + 1
-            if (frameNum >= 25) {
-                clearInterval(animation)
+    function touchMove(event) {
+        document.querySelector('.Carousel__content').style.left = `${event.targetTouches[0].screenX - touchX}px`
+    }
+
+    function positionAdjust(event) {
+        const currentLeft = Number(document.querySelector('.Carousel__content').style.left.slice(0, -2))
+        const rightPositionsArr = state.rightPositionsArr
+        const deviationsArr = []
+        for (let i = 0; i < rightPositionsArr.length; i++) {
+            if (rightPositionsArr[i] - currentLeft < 0) {
+                deviationsArr.push((rightPositionsArr[i] - currentLeft) * -1)
+            } else {
+                deviationsArr.push((rightPositionsArr[i] - currentLeft))
             }
-            animationStep(frameNum, direction)
-        }, 10);
+        }
+        let minDeviation = deviationsArr.reduce((previous, current, index) => {
+            if (current < previous) {
+                return current
+            } else {
+                return previous
+            } 
+        })
+        animatedMove(currentLeft, rightPositionsArr[deviationsArr.indexOf(minDeviation)])
     }
 
     return(
         <div className='Carousel'>
-            <div className='Carousel__content' style={{left: 0, gap: `0px ${props.gap}px`, gridTemplateColumns: state.gridTemplateColumns}}>
-                {state.content}
+            <div className='Carousel__content' onTouchMove={touchMove} onTouchStart={saveTouchX} onTouchEnd={positionAdjust}>
+                {props.content}     
             </div>
-            <button className='Carousel__arrow Carousel__arrow_left' onClick={movecarousel}></button>
-            <button className='Carousel__arrow Carousel__arrow_right' onClick={movecarousel}></button>
+            <button className='Carousel__arrow Carousel__arrow_left' onClick={move}></button>
+            <button className='Carousel__arrow Carousel__arrow_right' onClick={move}></button>
         </div>
     )
 }
 
 export default Carousel
-
-
-
-
-
-
-// const [startPoint, setStartPoint] = useState(0)
-
-
-
-
-
-
-{/* <button className='Carousel__arrow Carousel__arrow_left' onClick={moveCarousel}></button>
-<button className='Carousel__arrow Carousel__arrow_right' onClick={moveCarousel}></button> */}
-
-
-
-
-
-
-// function moveCarousel(event) {
-//     if (event.target.className === 'Carousel__arrow Carousel__arrow_left') {
-//         setStartPoint(startPoint - 25)
-//     } else {
-//         setStartPoint(startPoint + 25)
-//     }
-// }
