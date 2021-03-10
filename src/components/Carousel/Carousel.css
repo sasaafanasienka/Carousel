@@ -8,5 +8,5 @@
     display: flex;
     flex-wrap: nowrap;
     flex-direction: column;
-    overflow-x: hidden;
+    margin: 0 0 50px 0;
 }

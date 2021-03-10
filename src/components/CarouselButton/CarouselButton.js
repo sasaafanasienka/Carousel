@@ -13,9 +13,10 @@ function CarouselButton(props) {
     }
 
     const buttonClassName = `CarouselButton CarouselButton_${props.moveTo}`
+    let content = props.moveTo === 'previous' ? '<' : '>'
 
     return(
-        <button className={buttonClassName} onClick={move}></button>
+        <button className={buttonClassName} onClick={move}>{content}</button>
     )
 }
 

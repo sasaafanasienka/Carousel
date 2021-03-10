@@ -1,6 +1,8 @@
 .CarouselPagination {
-    position: relative;
+    position: absolute;
+    bottom: -40px;
     display: flex;
     justify-content: center;
     width: 100%;
+    z-index: 11;
 }
