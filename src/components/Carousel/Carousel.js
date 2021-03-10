@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import './Carousel.css';
 import animatedMove from "./utilits/animatedMove";
 import CarouselButton from "../CarouselButton/CarouselButton";
+import CarouselPagination from "../CarouselPagination/CarouselPagination";
 
 function Carousel(props) {
 
@@ -79,6 +80,7 @@ function Carousel(props) {
             </div>
             <CarouselButton moveTo='previous' currentPosition={currentPosition} positions={state.rightPositionsArr} savePosition={savePosition}/>
             <CarouselButton moveTo='next' currentPosition={currentPosition} positions={state.rightPositionsArr} savePosition={savePosition}/>
+            <CarouselPagination itemsQuantity={state.itemsQuantity} currentPosition={currentPosition} positions={state.rightPositionsArr}/>
         </div>
     )
 }

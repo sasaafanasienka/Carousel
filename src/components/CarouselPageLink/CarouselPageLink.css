@@ -1,0 +1,18 @@
+.CarouselPageLink {
+    /* position: absolute; */
+    width: 20px;
+    height: 20px;
+    /* top: calc(50% - 20px); */
+    background-color: black;
+    border-radius: 50%;
+    border: none;
+    z-index: 11;
+    margin: 0 10px 0 0;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+}
+
+.CarouselPageLink:last-of-type {
+    margin-right: 0
+}
