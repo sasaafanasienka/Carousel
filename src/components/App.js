@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import './App.css'
 import Carousel from "./Carousel/Carousel"
-import Car from './Carousel/Car'
 
 // import CarouselItem from './CarouselItem/CarouselItem'
 

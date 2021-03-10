@@ -1,7 +1,7 @@
 import React, { Component, useState, useEffect } from "react";
 import './Carousel.css';
-import Car from './Car'
 import animatedMove from "./utilits/animatedMove";
+import CarouselButton from "../CarouselButton/CarouselButton";
 
 function Carousel(props) {
 
@@ -42,14 +42,6 @@ function Carousel(props) {
         }
     });
 
-    function move(event) {
-        const currentPosition = Number(document.querySelector('.Carousel__content').style.left.slice(0, -2))
-        let direction = event.target.className === 'Carousel__arrow Carousel__arrow_left' ? -1 : 1
-        const newPosition = state.rightPositionsArr[state.rightPositionsArr.indexOf(currentPosition) + direction]
-        animatedMove(currentPosition, newPosition)
-        savePosition(newPosition)
-    }
-
     function saveTouchPoint(event) {
         savePoint(event.targetTouches[0].clientX)
     }
@@ -85,8 +77,8 @@ function Carousel(props) {
             <div className='Carousel__content' onTouchMove={touchMove} onTouchStart={saveTouchPoint} onTouchEnd={positionAdjust}>
                 {props.content}     
             </div>
-            <button className='Carousel__arrow Carousel__arrow_left' onClick={move}></button>
-            <button className='Carousel__arrow Carousel__arrow_right' onClick={move}></button>
+            <CarouselButton moveTo='previous' currentPosition={currentPosition} positions={state.rightPositionsArr} savePosition={savePosition}/>
+            <CarouselButton moveTo='next' currentPosition={currentPosition} positions={state.rightPositionsArr} savePosition={savePosition}/>
         </div>
     )
 }

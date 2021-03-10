@@ -1,4 +1,4 @@
-.Carousel__arrow {
+.CarouselButton {
     position: absolute;
     width: 40px;
     height: 40px;
@@ -10,10 +10,10 @@
     cursor: pointer;
 }
 
-.Carousel__arrow_left {
+.CarouselButton_previous {
     left: 10px;
 }
 
-.Carousel__arrow_right {
+.CarouselButton_next {
     right: 10px;
 }
