@@ -1,15 +1,12 @@
 import React, { Component, useState, useEffect } from "react";
 import './CarouselButton.css';
-import animatedMove from "../Carousel/utilits/animatedMove";
+import animatedMove from "../../utilits/animatedMove";
 
 function CarouselButton(props) {
 
     function move(event) {
-        const currentPosition = props.currentPosition
         let direction = props.moveTo === 'previous' ? -1 : 1
-        const newPosition = props.positions[props.positions.indexOf(currentPosition) + direction]
-        animatedMove(currentPosition, newPosition)
-        props.savePosition(newPosition)
+        props.onMove(direction)
     }
 
     const buttonClassName = `CarouselButton CarouselButton_${props.moveTo}`

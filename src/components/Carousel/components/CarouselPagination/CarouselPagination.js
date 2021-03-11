@@ -1,6 +1,6 @@
 import React, { Component, useState, useEffect } from "react";
 import './CarouselPagination.css';
-import animatedMove from "../Carousel/utilits/animatedMove";
+import animatedMove from "../../utilits/animatedMove";
 import CarouselPageLink from "../CarouselPageLink/CarouselPageLink";
 
 function CarouselPagination(props) {
@@ -9,7 +9,7 @@ function CarouselPagination(props) {
         let pagination = []
         for (let i = 0; i < props.itemsQuantity; i++) {
             pagination.push(
-                <CarouselPageLink key={i.toString()} id={i.toString()} currentPosition={props.currentPosition} positions={props.positions}/>
+                <CarouselPageLink key={i.toString()} id={i.toString()} onClick={props.onMove}/>
             )
         }
         return pagination

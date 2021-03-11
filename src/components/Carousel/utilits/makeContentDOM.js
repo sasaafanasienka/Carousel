@@ -1,10 +1,16 @@
-function makeContentDOM() {
-    if (props.content.length = props.itemsOnScreen + 2) {
-        return props.content
+function makeContentDOM(content, itemsOnScreen, loop) {
+    if (loop && content.length <= itemsOnScreen) {
+        return content
     } else {
-        let newContent = []
-        newContent.push(props.content[props.content.length - 1], props.content, props.content[0])
-        return newContent
+        let infiniteContent = []
+        for (let i = content.length - itemsOnScreen; i < content.length; i++) {
+            infiniteContent.push(content[i])
+        }
+        infiniteContent = infiniteContent.concat(content)
+        for (let i = 0; i < itemsOnScreen; i++) {
+            infiniteContent.push(content[i])
+        }
+        return infiniteContent
     }
 }
 

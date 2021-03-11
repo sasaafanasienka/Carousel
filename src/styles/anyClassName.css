@@ -3,4 +3,11 @@
     height: 150px;
     background-color: red;
     color: white;
+    font-size: 50px;
+    text-align: center;
+    font-family: Helvetica;
+    font-weight: bold;
+    padding: 40px 0;
+    box-sizing: border-box;
+    border-radius: 20px;
 }

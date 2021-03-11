@@ -6,7 +6,7 @@ function animatedMove(startPoint, endPoint) {
     function animationStep(currentframe, framesNum, startPoint, endPoint) {
         const moveDistance = endPoint - startPoint
         const animationFunction = (Math.sin((Math.PI / 2) * -1 + Math.PI * currentframe / (framesNum - 1)) + 1) / 2 //синусоида от 0 до 1
-        document.querySelector('.Carousel__content').style.left = `${startPoint + moveDistance * animationFunction}px`
+        document.querySelector('.CarouselContent').style.left = `${startPoint + moveDistance * animationFunction}px`
     }
   
     requestAnimationFrame(function animatedMove() {
