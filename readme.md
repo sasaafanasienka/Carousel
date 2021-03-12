@@ -1,9 +1,12 @@
 # Carousel
 It's my training project to learn react
 ## _How to use it in your project with React:_
-- copy folder 'Carousel' from 'src/components/' to your componenst folder;
-- import Carousel in your parent component. For example `import Carousel from "./Carousel/Carousel"`
-- install node modules
+- copy folder 'Carousel' from 'src/components/' to your folder 'components';
+- import Carousel in your parent component. For example:
+```sh
+import Carousel from "./Carousel/Carousel"
+```
+- install node modules:
 ```sh
 npm install react react-dom
 npm install --save-dev css-loader
@@ -28,11 +31,11 @@ npm install --save-dev style-loader
     ]
 ```
 - also, you need to use some settings:
-    - `gap` - gap between carousel items. type: number. (px)  
-    - `itemsOnScreen` - how much items you need to see per view. type: number  
+    - `gap` - gap between carousel items in pixels. type: number  
+    - `itemsOnScreen` - how many items you need to see per view. type: number  
     - `loop` - choose `true` if you need infinite slides in your carousel. type: boolean  
 
-## _How to check, how it works right now:_
+## _How to check Carousel working:_
 
 Latest version of the project available on:
 https://sasaafanasienka.github.io/Carousel/
