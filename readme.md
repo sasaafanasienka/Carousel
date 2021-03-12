@@ -9,19 +9,19 @@ How to use it in your project with React:
     `npm install --save-dev css-loader`
     `npm install --save-dev style-loader`
 - insert the component in your DOM:
-    `<div className='App'>
-        <Carousel
-            content={arrayWithElems}
-            gap={20}
-            itemsOnScreen={3}
-            loop={true}
-        />
-    </div>`
+    `<div className='App'>`
+        `<Carousel`
+            `content={arrayWithElems}`
+            `gap={20}`
+            `itemsOnScreen={3}`
+            `loop={true}`
+        `/>`
+    `</div>`
 - as content you need to use the array with any html elements. For example:
-    [
-        <div className='anyClassName'>Content 1</div>,
-        <div className='anyClassName'>Content 2</div>,
-    ]
+    `[`
+        `<div className='anyClassName'>Content 1</div>,`
+        `<div className='anyClassName'>Content 2</div>,`
+    `]`
 - you need to use some settings:
     - gap - gap between carousel items. type: number. (px)
     - itemsOnScreen - how much items you need to see per view. type: number
