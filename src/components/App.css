@@ -5,6 +5,12 @@
     margin: 0;
 }
 
+@media (max-width: 768px) {
+    .App {
+        padding: 0;
+    }
+}
+
 .inputs {
     display: flex;
     flex-direction: column;
