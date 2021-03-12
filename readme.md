@@ -1,6 +1,9 @@
 # Carousel
+
 It's my training project to learn react
+
 ## _How to use it in your project with React:_
+
 - copy folder 'Carousel' from 'src/components/' to your folder 'components';
 - import Carousel in your parent component. For example:
 ```sh
@@ -31,19 +34,14 @@ npm install --save-dev style-loader
     ]
 ```
 - also, you need to use some settings:
-    - `gap` - gap between carousel items in pixels. type: number  
+    - `gap` - gap between items (in pixels). type: number  
     - `itemsOnScreen` - how many items you need to see per view. type: number  
     - `loop` - choose `true` if you need infinite slides in your carousel. type: boolean  
 
 ## _How to check Carousel working:_
 
-Latest version of the project available on:
+The latest version of the project is available on:
 https://sasaafanasienka.github.io/Carousel/
 
-Current settings.
-- 10 div blocks as the content
-- gap: 20px
-- 3 items on screen
-- enabled infinite loop
-
-You need install the project if you need to check how it works with other settings
+Current settings are generating randomly. 
+If you need to check how it works with other settings just refresh the page.
