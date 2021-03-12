@@ -11,6 +11,10 @@
     }
 }
 
+::-webkit-scrollbar {
+    width: 0;
+  }
+
 .inputs {
     display: flex;
     flex-direction: column;
