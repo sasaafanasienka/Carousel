@@ -2,6 +2,7 @@
 it's my training project to learn react
 
 How to use it in your project with React:
+
 - copy folder 'Carousel' from 'src/components/' to your componenst folder;
 - import Carousel in your parent component. For example `import Carousel from "./Carousel/Carousel"`
 - install node modules
@@ -23,11 +24,12 @@ How to use it in your project with React:
         `<div className='anyClassName'>Content 2</div>,`
     `]`
 - you need to use some settings:
-    - gap - gap between carousel items. type: number. (px)
-    - itemsOnScreen - how much items you need to see per view. type: number
-    - loop - choose `true` if you need infinite slides in your carousel. type: boolean
+    - `gap` - gap between carousel items. type: number. (px)
+    - `itemsOnScreen` - how much items you need to see per view. type: number
+    - `loop` - choose `true` if you need infinite slides in your carousel. type: boolean
 
 How to check, how it works right now:
+
 Latest version of the project available on:
 https://sasaafanasienka.github.io/Carousel/
 Current settings.
