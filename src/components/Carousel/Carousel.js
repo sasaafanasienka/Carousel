@@ -11,49 +11,39 @@ function Carousel(props) {
 
     const [touchPoint, savePoint] = useState(0)
     const [currentPosition, savePosition] = useState(0)
-    const [state, setState] = useState({
-        componentWasMounted: false
-    })
+    const [itemsOnScreen, setItemsOnScreen] = useState(props.itemsOnScreen ? props.itemsOnScreen : 1)
+    const [gap, setGap] = useState(props.gap ? props.gap : '10px')
+    const [loop, setLoop] = useState(props.loop ? props.loop : false)
+    const [itemsQuantity, setItemsQuantity] = useState(props.content.length)
+    const [DOMItemsQuantity, setDOMItemsQuantity] = useState(loop && itemsQuantity > itemsOnScreen ? itemsQuantity + 2 * itemsOnScreen : itemsQuantity)
+    const [itemWidth, setItemWidth] = useState(0)
+    const [rightPositionsArr, setRightPositionsArr] = useState([])
+    const [gridTemplate, setGridTemplate] = useState('')
+    const [wasMounted, setWasMounted] = useState(false)
 
     useEffect(() => {
-        if (!state.componentWasMounted) {
+        if (!wasMounted) {
             const carouselWidth = document.querySelector('.Carousel').clientWidth
-            const itemsOnScreen = props.itemsOnScreen
-            const gap = props.gap
             const itemWidth = (carouselWidth - (gap * (itemsOnScreen - 1))) / itemsOnScreen
-            let itemsQuantity = props.content.length
-            let realItemsQuantity = itemsQuantity
-            if (props.loop && itemsQuantity > itemsOnScreen) {
-                realItemsQuantity = itemsQuantity + 2 * itemsOnScreen
-            }
-            let gridTemplate = ''
-            for (let i = 0; i < realItemsQuantity; i++) {
-                gridTemplate = gridTemplate.concat(`${itemWidth}px `)
-            }
+            let gridTemplate = `repeat(${DOMItemsQuantity}, ${itemWidth}px)`
             const rightPositionsArr = [0]
-            for (let i = 1; i <= realItemsQuantity - itemsOnScreen; i++) {
+            for (let i = 1; i <= DOMItemsQuantity - itemsOnScreen; i++) {
                 rightPositionsArr.push(-i * (itemWidth + gap))
             }
             let renderingPosition = 0
             if (props.loop && itemsQuantity > itemsOnScreen) {
                 renderingPosition = rightPositionsArr[itemsOnScreen]
             }
-            savePosition(renderingPosition)
             document.querySelector('.CarouselContent').style.left = `${renderingPosition}px`
-            document.querySelector('.CarouselContent').style.gap = `0px ${props.gap}px`
+            document.querySelector('.CarouselContent').style.gap = `0px ${gap}px`
             document.querySelector('.CarouselContent').style.gridTemplateColumns = gridTemplate
-            setState({
-                componentWasMounted: true,
-                carouselWidth: carouselWidth,
-                itemsOnScreen: itemsOnScreen,
-                itemsQuantity: itemsQuantity,
-                rightPositionsArr: rightPositionsArr,
-                gap: gap,
-                itemWidth: itemWidth,
-                gridTEmplate: gridTemplate,
-            })
+            savePosition(renderingPosition)
+            setItemWidth(itemWidth)
+            setRightPositionsArr(rightPositionsArr)
+            setGridTemplate(gridTemplate)
+            setWasMounted(true);
         }
-    });
+    })
 
     function saveTouchPoint(event) {
         savePoint(event.targetTouches[0].clientX)
@@ -65,17 +55,17 @@ function Carousel(props) {
     }
 
     function buttonMove(direction) {
-        const currentIndex = state.rightPositionsArr.indexOf(currentPosition)
-        const newPosition = state.rightPositionsArr[currentIndex + direction]
+        const currentIndex = rightPositionsArr.indexOf(currentPosition)
+        const newPosition = rightPositionsArr[currentIndex + direction]
         if (newPosition !== undefined) {
             animatedMove(currentPosition, newPosition)
-            if (props.loop && state.rightPositionsArr.indexOf(newPosition) === 0) {
-                flashMove(state.rightPositionsArr[state.itemsQuantity])
-                savePosition(state.rightPositionsArr[state.itemsQuantity])
+            if (loop && rightPositionsArr.indexOf(newPosition) === 0) {
+                flashMove(rightPositionsArr[itemsQuantity])
+                savePosition(rightPositionsArr[itemsQuantity])
                 return
-            } else if (props.loop && state.rightPositionsArr.indexOf(newPosition) === state.rightPositionsArr.length - 1) {
-                flashMove(state.rightPositionsArr[state.rightPositionsArr.length - 1 - state.itemsQuantity])
-                savePosition(state.rightPositionsArr[state.rightPositionsArr.length - 1 - state.itemsQuantity])
+            } else if (loop && rightPositionsArr.indexOf(newPosition) === rightPositionsArr.length - 1) {
+                flashMove(rightPositionsArr[rightPositionsArr.length - 1 - itemsQuantity])
+                savePosition(rightPositionsArr[rightPositionsArr.length - 1 - itemsQuantity])
                 return
             }
             savePosition(newPosition)
@@ -85,12 +75,12 @@ function Carousel(props) {
 
     function paginationMove(id) {
         let loopCorrection = 0
-        if (props.loop && props.content.length > state.itemsOnScreen) {
-            loopCorrection = state.itemsOnScreen;
+        if (loop && itemsQuantity > itemsOnScreen) {
+            loopCorrection = itemsOnScreen;
         }
-        let newPosition = state.rightPositionsArr[Number(id) + loopCorrection]
+        let newPosition = rightPositionsArr[Number(id) + loopCorrection]
         if (newPosition === undefined) {
-            newPosition = state.rightPositionsArr[state.itemsQuantity - state.itemsOnScreen]
+            newPosition = rightPositionsArr[itemsQuantity - itemsOnScreen]
         }
         if (newPosition !== currentPosition) {
             animatedMove(currentPosition, newPosition)
@@ -101,28 +91,28 @@ function Carousel(props) {
     function positionAdjust() {
         const currentX = Number(document.querySelector('.CarouselContent').style.left.slice(0, -2))
         let nearestRightPos = 0
-        for (let i = 1; i < state.rightPositionsArr.length; i++) {
-            if (Math.abs(currentX - state.rightPositionsArr[i]) < Math.abs(currentX - state.rightPositionsArr[nearestRightPos])) {
+        for (let i = 1; i < rightPositionsArr.length; i++) {
+            if (Math.abs(currentX - rightPositionsArr[i]) < Math.abs(currentX - rightPositionsArr[nearestRightPos])) {
                 nearestRightPos = i
             }
         }
-        let newPosition = state.rightPositionsArr[nearestRightPos]
+        let newPosition = rightPositionsArr[nearestRightPos]
         animatedMove(currentX, newPosition)
-        if (props.loop && state.rightPositionsArr.indexOf(newPosition) === 0) {
-            flashMove(state.rightPositionsArr[state.itemsQuantity])
-            savePosition(state.rightPositionsArr[state.itemsQuantity])
+        if (loop && rightPositionsArr.indexOf(newPosition) === 0) {
+            flashMove(rightPositionsArr[itemsQuantity])
+            savePosition(rightPositionsArr[itemsQuantity])
             return
-        } else if (props.loop && state.rightPositionsArr.indexOf(newPosition) === state.rightPositionsArr.length - 1) {
-            flashMove(state.rightPositionsArr[state.rightPositionsArr.length - 1 - state.itemsQuantity])
-            savePosition(state.rightPositionsArr[state.rightPositionsArr.length - 1 - state.itemsQuantity])
+        } else if (loop && rightPositionsArr.indexOf(newPosition) === rightPositionsArr.length - 1) {
+            flashMove(rightPositionsArr[rightPositionsArr.length - 1 - itemsQuantity])
+            savePosition(rightPositionsArr[rightPositionsArr.length - 1 - itemsQuantity])
             return
         }
-        savePosition(state.rightPositionsArr[nearestRightPos])
+        savePosition(rightPositionsArr[nearestRightPos])
     }
 
     return(
         <div className='Carousel'>
-            <CarouselContent content={makeContentDOM(props.content, props.itemsOnScreen, props.loop)} 
+            <CarouselContent content={makeContentDOM(props.content, itemsOnScreen, loop)} 
                              onTouch={saveTouchPoint} 
                              onMove={touchMove} 
                              onTouchEnd={positionAdjust}
@@ -134,7 +124,7 @@ function Carousel(props) {
                             onMove={buttonMove}
             />
             <CarouselPagination onMove={paginationMove} 
-                                itemsQuantity={state.itemsQuantity}
+                                itemsQuantity={itemsQuantity}
             />
         </div>
     )
