@@ -12,7 +12,7 @@ function Carousel(props) {
     const [touchPoint, savePoint] = useState(0)
     const [currentPosition, savePosition] = useState(0)
     const [itemsOnScreen, setItemsOnScreen] = useState(props.itemsOnScreen ? props.itemsOnScreen : 1)
-    const [gap, setGap] = useState(props.gap ? props.gap : '10px')
+    const [gap, setGap] = useState(props.gap !== undefined ? props.gap : 10)
     const [loop, setLoop] = useState(props.loop ? props.loop : false)
     const [itemsQuantity, setItemsQuantity] = useState(props.content.length)
     const [DOMItemsQuantity, setDOMItemsQuantity] = useState(loop && itemsQuantity > itemsOnScreen ? itemsQuantity + 2 * itemsOnScreen : itemsQuantity)
@@ -26,13 +26,17 @@ function Carousel(props) {
             const carouselWidth = document.querySelector('.Carousel').clientWidth
             const itemWidth = (carouselWidth - (gap * (itemsOnScreen - 1))) / itemsOnScreen
             let gridTemplate = `repeat(${DOMItemsQuantity}, ${itemWidth}px)`
-            const rightPositionsArr = [0]
-            for (let i = 1; i <= DOMItemsQuantity - itemsOnScreen; i++) {
-                rightPositionsArr.push(-i * (itemWidth + gap))
-            }
+            let rightPositionsArr = [0]
             let renderingPosition = 0
-            if (props.loop && itemsQuantity > itemsOnScreen) {
-                renderingPosition = rightPositionsArr[itemsOnScreen]
+            if (itemsQuantity <= itemsOnScreen) {
+                renderingPosition = (carouselWidth - (itemWidth * itemsQuantity + gap * (itemsQuantity - 1))) / 2
+                rightPositionsArr = [renderingPosition]
+                console.log(rightPositionsArr)
+            } else {
+                for (let i = 1; i <= DOMItemsQuantity - itemsOnScreen; i++) {
+                    rightPositionsArr.push(-i * (itemWidth + gap))
+                }
+                renderingPosition = props.loop ? rightPositionsArr[itemsOnScreen] : 0
             }
             document.querySelector('.CarouselContent').style.left = `${renderingPosition}px`
             document.querySelector('.CarouselContent').style.gap = `0px ${gap}px`
@@ -98,11 +102,11 @@ function Carousel(props) {
         }
         let newPosition = rightPositionsArr[nearestRightPos]
         animatedMove(currentX, newPosition)
-        if (loop && rightPositionsArr.indexOf(newPosition) === 0) {
+        if (loop && rightPositionsArr.indexOf(newPosition) === 0 && rightPositionsArr.length > 1) {
             flashMove(rightPositionsArr[itemsQuantity])
             savePosition(rightPositionsArr[itemsQuantity])
             return
-        } else if (loop && rightPositionsArr.indexOf(newPosition) === rightPositionsArr.length - 1) {
+        } else if (loop && rightPositionsArr.indexOf(newPosition) === rightPositionsArr.length - 1 && rightPositionsArr.length > 1) {
             flashMove(rightPositionsArr[rightPositionsArr.length - 1 - itemsQuantity])
             savePosition(rightPositionsArr[rightPositionsArr.length - 1 - itemsQuantity])
             return
