@@ -24,3 +24,7 @@
 .CarouselButton_next {
     right: 10px;
 }
+
+.CarouselButton_unactive {
+    opacity: .3;
+}

@@ -20,6 +20,8 @@ function Carousel(props) {
     const [rightPositionsArr, setRightPositionsArr] = useState([])
     const [gridTemplate, setGridTemplate] = useState('')
     const [wasMounted, setWasMounted] = useState(false)
+    const [previousIsActive, setPreviousIsActive] = useState(loop && itemsQuantity > itemsOnScreen ? true : false)
+    const [nextIsActive, setNextIsActive] = useState(itemsQuantity > itemsOnScreen ? true : false)
 
     useEffect(() => {
         if (!wasMounted) {
@@ -62,6 +64,7 @@ function Carousel(props) {
         const currentIndex = rightPositionsArr.indexOf(currentPosition)
         const newPosition = rightPositionsArr[currentIndex + direction]
         if (newPosition !== undefined) {
+            arrowButtonsManage(rightPositionsArr.indexOf(newPosition))
             animatedMove(currentPosition, newPosition)
             if (loop && rightPositionsArr.indexOf(newPosition) === 0) {
                 flashMove(rightPositionsArr[itemsQuantity])
@@ -74,7 +77,6 @@ function Carousel(props) {
             }
             savePosition(newPosition)
         }
-
     }
 
     function paginationMove(id) {
@@ -87,6 +89,7 @@ function Carousel(props) {
             newPosition = rightPositionsArr[itemsQuantity - itemsOnScreen]
         }
         if (newPosition !== currentPosition) {
+            arrowButtonsManage(rightPositionsArr.indexOf(newPosition))
             animatedMove(currentPosition, newPosition)
             savePosition(newPosition)
         }
@@ -101,6 +104,7 @@ function Carousel(props) {
             }
         }
         let newPosition = rightPositionsArr[nearestRightPos]
+        arrowButtonsManage(rightPositionsArr.indexOf(newPosition))
         animatedMove(currentX, newPosition)
         if (loop && rightPositionsArr.indexOf(newPosition) === 0 && rightPositionsArr.length > 1) {
             flashMove(rightPositionsArr[itemsQuantity])
@@ -114,6 +118,19 @@ function Carousel(props) {
         savePosition(rightPositionsArr[nearestRightPos])
     }
 
+    function arrowButtonsManage(position) {
+        if (!loop && position === 0) {
+            setPreviousIsActive(false)
+        } else if (!loop && position !== 0 && !previousIsActive) {
+            setPreviousIsActive(true)
+        }
+        if (!loop && position === rightPositionsArr.length - 1) {
+            setNextIsActive(false)
+        } else if (!loop && position !== rightPositionsArr.length - 1 && !nextIsActive) {
+            setNextIsActive(true)
+        }
+    }
+
     return(
         <div className='Carousel'>
             <CarouselContent content={makeContentDOM(props.content, itemsOnScreen, loop)} 
@@ -121,11 +138,13 @@ function Carousel(props) {
                              onMove={touchMove} 
                              onTouchEnd={positionAdjust}
             />
-            <CarouselButton moveTo='previous' 
+            <CarouselButton moveTo='previous'
+                            isActive={previousIsActive} 
                             onMove={buttonMove}
             />
             <CarouselButton moveTo='next' 
                             onMove={buttonMove}
+                            isActive={nextIsActive}
             />
             <CarouselPagination onMove={paginationMove} 
                                 itemsQuantity={itemsQuantity}

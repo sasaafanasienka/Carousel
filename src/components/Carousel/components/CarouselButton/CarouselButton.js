@@ -4,17 +4,28 @@ import animatedMove from "../../utilits/animatedMove";
 
 function CarouselButton(props) {
 
+    console.log(props.isActive)
+
     function move(event) {
         let direction = props.moveTo === 'previous' ? -1 : 1
         props.onMove(direction)
     }
 
-    const buttonClassName = `CarouselButton CarouselButton_${props.moveTo}`
+    let buttonClassName = `CarouselButton CarouselButton_${props.moveTo} `
+    if (!props.isActive) {
+        buttonClassName = buttonClassName.concat(`CarouselButton_unactive`)
+    }
     let content = props.moveTo === 'previous' ? '<' : '>'
 
-    return(
-        <button className={buttonClassName} onClick={move}>{content}</button>
-    )
+    if (props.isActive) {
+        return(
+            <button className={buttonClassName} onClick={move}>{content}</button>
+        )
+    } else {
+        return(
+            <button className={buttonClassName}>{content}</button>
+        )
+    }
 }
 
 export default CarouselButton
