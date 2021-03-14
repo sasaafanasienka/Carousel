@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import './App.css'
 import '../styles/anyClassName.css'
 import Carousel from "./Carousel/Carousel"
@@ -22,7 +22,7 @@ function App() {
     const[state, setState] = useState({
         content: getRandom(3,10),
         gap: getRandom(0,4) * 5,
-        itemsOnScreen: getRandom(3,5),
+        itemsPerView: getRandom(3,5),
         loop: getRandom(0,1) === 0 ? true : false
     })
 
@@ -30,12 +30,12 @@ function App() {
         <div className='App'>
             <h1 className='text'>Number of items: {state.content}</h1>
             <h1 className='text'>Gap: {state.gap}px</h1>
-            <h1 className='text'>Items per view: {state.itemsOnScreen}</h1>
+            <h1 className='text'>Items per view: {state.itemsPerView}</h1>
             <h1 className='text'>Loop: {state.loop.toString()}</h1>
             <Carousel
                 content={makeContentArr(state.content)}
                 gap={state.gap}
-                itemsOnScreen={state.itemsOnScreen}
+                itemsPerView={state.itemsPerView}
                 loop={state.loop}
             />
         </div>

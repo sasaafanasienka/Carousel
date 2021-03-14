@@ -3,7 +3,7 @@ import './CarouselPageLink.css';
 
 function CarouselPageLink(props) {
 
-    function goTo(event) {
+    function goTo() {
         props.onClick(props.id)
     }
 

@@ -1,19 +1,16 @@
-import React, { Component, useState, useEffect } from "react";
+import React from "react";
 import './CarouselButton.css';
-import animatedMove from "../../utilits/animatedMove";
 
 function CarouselButton(props) {
 
-    console.log(props.isActive)
-
-    function move(event) {
+    function move() {
         let direction = props.moveTo === 'previous' ? -1 : 1
-        props.onMove(direction)
+        props.onClick(direction)
     }
 
-    let buttonClassName = `CarouselButton CarouselButton_${props.moveTo} `
+    let buttonClassName = `CarouselButton CarouselButton_${props.moveTo}`
     if (!props.isActive) {
-        buttonClassName = buttonClassName.concat(`CarouselButton_unactive`)
+        buttonClassName = buttonClassName.concat(` CarouselButton_unactive`)
     }
     let content = props.moveTo === 'previous' ? '<' : '>'
 

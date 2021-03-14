@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 
-function makeContentDOM(content, itemsOnScreen, loop) {
-    if (!loop || content.length <= itemsOnScreen) {
+function makeContentDOM(content, itemsPerView, loop) {
+    if (!loop || content.length <= itemsPerView) {
         let editedContent =[]
         for( let i = 0; i < content.length; i++) {
             editedContent.push(
@@ -13,7 +13,7 @@ function makeContentDOM(content, itemsOnScreen, loop) {
         return editedContent
     } else {
         let infiniteContent = []
-        for (let i = content.length - itemsOnScreen; i < content.length; i++) {
+        for (let i = content.length - itemsPerView; i < content.length; i++) {
             infiniteContent.push(
                 <div key={i - content.length}>
                     {content[i]}
@@ -27,7 +27,7 @@ function makeContentDOM(content, itemsOnScreen, loop) {
                 </div>
             )
         }
-        for (let i = 0; i < itemsOnScreen; i++) {
+        for (let i = 0; i < itemsPerView; i++) {
             infiniteContent.push(
                 <div key={i + content.length}>
                     {content[i]}
