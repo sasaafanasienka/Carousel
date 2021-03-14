@@ -32,6 +32,7 @@ function App() {
             <h1 className='text'>Gap: {state.gap}px</h1>
             <h1 className='text'>Items per view: {state.itemsPerView}</h1>
             <h1 className='text'>Loop: {state.loop.toString()}</h1>
+            <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>
             <Carousel
                 content={makeContentArr(state.content)}
                 gap={state.gap}
