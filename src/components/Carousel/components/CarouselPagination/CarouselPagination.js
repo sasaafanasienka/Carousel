@@ -8,7 +8,7 @@ function CarouselPagination(props) {
         let pagination = []
         for (let i = 0; i < props.itemsQuantity; i++) {
             pagination.push(
-                <CarouselPageLink key={i.toString()} id={i.toString()} onClick={props.onClick}/>
+                <CarouselPageLink key={i.toString()} id={i} onClick={props.onClick}/>
             )
         }
         return pagination

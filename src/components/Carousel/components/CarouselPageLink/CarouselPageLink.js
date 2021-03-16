@@ -9,7 +9,7 @@ function CarouselPageLink(props) {
 
     return(
         <button className='CarouselPageLink' onClick={goTo}>
-            {Number(props.id) + 1}
+            {props.id + 1}
         </button>
     )
 }
