@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from "react";
+import React, { useEffect, useRef, createRef, Component } from "react";
 import './Carousel.css';
 import animatedMove from "./utilits/animatedMove";
 import flashMove from "./utilits/flashMove";
@@ -6,143 +6,163 @@ import makeContentDOM from './utilits/makeContentDOM'
 import CarouselButton from "./components/CarouselButton/CarouselButton";
 import CarouselPagination from "./components/CarouselPagination/CarouselPagination";
 import CarouselContent from "./components/CarouselContent/CarouselContent";
+import { render } from "react-dom";
 
-function Carousel(props) {
+class Carousel extends Component {
 
-    const carouselContent = createRef()
+    constructor(props) {
+        super(props)
 
-    const [wasMounted, setWasMounted] = useState(false)
-    const [itemsQuantity, setItemsQuantity] = useState(props.content.length)
-    const [itemsPerView, setitemsPerView] = useState(props.itemsPerView ? props.itemsPerView : 1)
-    const [gap, setGap] = useState(props.gap !== undefined ? props.gap : 10)
-    const [loop, setLoop] = useState(props.loop ? props.loop : false)
-    const [DOMItemsQuantity, setDOMItemsQuantity] = useState(loop && itemsQuantity > itemsPerView ? itemsQuantity + 2 * itemsPerView : itemsQuantity) // if (loop) we need to duplicate some items
-    const [currentPos, savePosition] = useState(0) //current style.left of carousel content block
-    const [correctPositions, setCorrectPositions] = useState([]) //array of correct coordinates for carousel content block
-    const [prevButtonIsActive, setPrevButtonIsActive] = useState(loop && itemsQuantity > itemsPerView ? true : false)
-    const [nextButtonIsActive, setNextButtonIsActive] = useState(itemsQuantity > itemsPerView ? true : false)
-    const [touchPoint, savePoint] = useState(0) 
-    
-    useEffect(() => {
-        if (!wasMounted) {
+        this.carouselContent = createRef()
+
+        this.itemsQuantity = this.props.content.length
+        this.itemsPerView = this.props.itemsPerView ? this.props.itemsPerView : 1
+        this.gap = this.props.gap !== undefined ? this.props.gap : 10
+        this.loop = this.props.loop ? this.props.loop : false
+        this.DOMItemsQuantity = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsQuantity + 2 * this.itemsPerView : this.itemsQuantity // if (loop) we need to duplicate some items
+
+        this.state ={
+            wasMounted: false,
+            currentPos: 0, //current style.left of carousel content block
+            correctPositions: [], //array of correct coordinates for carousel content block
+            prevButtonIsActive: this.loop && this.itemsQuantity > this.itemsPerView ? true : false,
+            nextButtonIsActive: this.loop && this.itemsQuantity > this.itemsPerView ? true : false,
+            touchPoint: 0
+        }
+
+        this.saveTouchPoint = this.saveTouchPoint.bind(this)
+        this.touchMove = this.touchMove.bind(this)
+        // this.buttonMove = this.buttonMove.bind(this)
+        // this.paginationMove = this.paginationMove.bind(this)
+        // this.positionCorrection = this.positionCorrection.bind(this)
+        // this.arrowButtonsManage = this.arrowButtonsManage.bind(this)
+        // this.getLoop = this.getLoop.bind(this)
+    }
+
+    componentDidMount() {
+        if (!this.state.wasMounted) {
             const carouselWidth = document.querySelector('.Carousel').clientWidth
-            const itemWidth = (carouselWidth - (gap * (itemsPerView - 1))) / itemsPerView
-            let gridTemplate = `repeat(${DOMItemsQuantity}, ${itemWidth}px)`
+            const itemWidth = (carouselWidth - (this.gap * (this.itemsPerView - 1))) / this.itemsPerView
+            let gridTemplate = `repeat(${this.DOMItemsQuantity}, ${itemWidth}px)`
             let correctPositions = [0]
             let renderingPosition = 0
-            if (itemsQuantity <= itemsPerView) {
-                renderingPosition = (carouselWidth - (itemWidth * itemsQuantity + gap * (itemsQuantity - 1))) / 2
+            if (this.state.itemsQuantity <= this.state.itemsPerView) {
+                renderingPosition = (carouselWidth - (itemWidth * this.state.itemsQuantity + this.state.gap * (this.state.itemsQuantity - 1))) / 2
                 correctPositions = [renderingPosition] //if there items per view more than items quantity we have only one right position in the center of view
             } else {
-                for (let i = 1; i <= DOMItemsQuantity - itemsPerView; i++) {
-                    correctPositions.push(-i * (itemWidth + gap))
+                for (let i = 1; i <= this.state.DOMItemsQuantity - this.state.itemsPerView; i++) {
+                    correctPositions.push(-i * (itemWidth + this.state.gap))
                 }
-                renderingPosition = props.loop ? correctPositions[itemsPerView] : 0
+                renderingPosition = this.state.loop ? correctPositions[this.state.itemsPerView] : 0
             }
-            carouselContent.current.style.left = `${renderingPosition}px`
-            carouselContent.current.style.gap = `0px ${gap}px`
-            carouselContent.current.style.gridTemplateColumns = gridTemplate
-            savePosition(renderingPosition)
-            setCorrectPositions(correctPositions)
-            setWasMounted(true);
-        }
-    })
-
-    function saveTouchPoint(event) {
-        savePoint(event.targetTouches[0].clientX)
-    }
-
-    function touchMove(event) {
-        const offset = event.targetTouches[0].clientX - touchPoint
-        carouselContent.current.style.left = `${currentPos + offset}px`
-    }
-
-    function buttonMove(direction) {
-        const currentIndex = correctPositions.indexOf(currentPos)
-        const newPos = correctPositions[currentIndex + direction]
-        arrowButtonsManage(correctPositions.indexOf(newPos))
-        animatedMove(currentPos, newPos)
-        getLoop(newPos)
-    }
-
-    function paginationMove(id) {
-        let loopCorrection = 0
-        if (loop && itemsQuantity > itemsPerView) {
-            loopCorrection = itemsPerView; //if (loop) we have additional carousel items in DOM
-        }
-        let newPos = correctPositions[Number(id) + loopCorrection]
-        if (newPos === undefined) { //this can happen if you go to the last item of carousel and loop is unactive
-            newPos = correctPositions[itemsQuantity - itemsPerView] //it wiil be move on nearest correct position 
-        }
-        if (newPos !== currentPos) {
-            arrowButtonsManage(correctPositions.indexOf(newPos))
-            animatedMove(currentPos, newPos)
-            savePosition(newPos)
+            this.carouselContent.current.style.left = `${renderingPosition}px`
+            this.carouselContent.current.style.gap = `0px ${this.gap}px`
+            this.carouselContent.current.style.gridTemplateColumns = gridTemplate
+            this.setState({
+                currentPos: renderingPosition,
+                correctPositions: correctPositions,
+                wasMounted: true
+            })
         }
     }
 
-    function positionCorrection() {
-        const currentPos = Number(carouselContent.current.style.left.slice(0, -2))
-        let nearestCorrectPos = 0
-        for (let i = 1; i < correctPositions.length; i++) {
-            if (Math.abs(currentPos - correctPositions[i]) < Math.abs(currentPos - correctPositions[nearestCorrectPos])) {
-                nearestCorrectPos = i
-            }
-        }
-        let newPos = correctPositions[nearestCorrectPos]
-        arrowButtonsManage(correctPositions.indexOf(newPos))
-        animatedMove(currentPos, newPos)
-        getLoop(newPos)
+    saveTouchPoint(event) {
+        this.setState({touchPoint: event.targetTouches[0].clientX})
     }
 
-    function arrowButtonsManage(position) {
-        if (!loop) {
-            if (position === 0) {
-                setPrevButtonIsActive(false)
-            } else if (position !== 0 && !prevButtonIsActive) {
-                setPrevButtonIsActive(true)
-            }
-            if (position === correctPositions.length - 1) {
-                setNextButtonIsActive(false)
-            } else if (position !== correctPositions.length - 1 && !nextButtonIsActive) {
-                setNextButtonIsActive(true)
-            }
-        }
+    touchMove(event) {
+        const offset = event.targetTouches[0].clientX - this.state.touchPoint
+        this.carouselContent.current.style.left = `${this.state.currentPos + offset}px`
     }
 
-    function getLoop(newPos) {
-        if (loop && correctPositions.indexOf(newPos) === 0 && correctPositions.length > 1) {
-            flashMove(correctPositions[itemsQuantity])
-            savePosition(correctPositions[itemsQuantity])
-        } else if (loop && correctPositions.indexOf(newPos) === correctPositions.length - 1 && correctPositions.length > 1) {
-            flashMove(correctPositions[correctPositions.length - 1 - itemsQuantity])
-            savePosition(correctPositions[correctPositions.length - 1 - itemsQuantity])
-        } else {
-            savePosition(newPos)
-        }
-    }
+    // buttonMove(direction) {
+    //     const currentIndex = correctPositions.indexOf(this.state.currentPos)
+    //     const newPos = this.state.correctPositions[currentIndex + direction]
+    //     arrowButtonsManage(correctPositions.indexOf(newPos))
+    //     animatedMove(this.state.currentPos, newPos)
+    //     getLoop(newPos)
+    // }
 
-    return(
-        <div className='Carousel'>
-            <CarouselContent content={makeContentDOM(props.content, itemsPerView, loop)} 
-                             onTouchStart={saveTouchPoint} 
-                             onMove={touchMove} 
-                             onTouchEnd={positionCorrection}
-                             ref={carouselContent}
-            />
-            <CarouselButton moveTo='previous'
-                            isActive={prevButtonIsActive} 
-                            onClick={buttonMove}
-            />
-            <CarouselButton moveTo='next' 
-                            onClick={buttonMove}
-                            isActive={nextButtonIsActive}
-            />
-            <CarouselPagination onClick={paginationMove} 
-                                itemsQuantity={itemsQuantity}
-            />
-        </div>
-    )
+    // paginationMove(id) {
+    //     let loopCorrection = 0
+    //     if (this.state.loop && this.state.itemsQuantity > this.state.itemsPerView) {
+    //         loopCorrection = this.state.itemsPerView; //if (loop) we have additional carousel items in DOM
+    //     }
+    //     let newPos = this.state.correctPositions[Number(id) + loopCorrection]
+    //     if (newPos === undefined) { //this can happen if you go to the last item of carousel and loop is unactive
+    //         newPos = this.state.correctPositions[this.state.itemsQuantity - this.state.itemsPerView] //it wiil be move on nearest correct position 
+    //     }
+    //     if (newPos !== this.state.currentPos) {
+    //         arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
+    //         animatedMove(this.state.currentPos, newPos)
+    //         this.setState({currentPos: newPos})
+    //     }
+    // }
+
+    // positionCorrection() {
+    //     const currentPos = Number(carouselContent.current.style.left.slice(0, -2))
+    //     let nearestCorrectPos = 0
+    //     for (let i = 1; i < this.state.correctPositions.length; i++) {
+    //         if (Math.abs(currentPos - this.state.correctPositions[i]) < Math.abs(currentPos - this.state.correctPositions[nearestCorrectPos])) {
+    //             nearestCorrectPos = i
+    //         }
+    //     }
+    //     let newPos = this.state.correctPositions[nearestCorrectPos]
+    //     arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
+    //     animatedMove(currentPos, newPos)
+    //     getLoop(newPos)
+    // }
+
+    // arrowButtonsManage(position) {
+    //     if (!this.state.loop) {
+    //         if (position === 0) {
+    //             this.setState({prevButtonIsActive: false})
+    //         } else if (position !== 0 && !this.state.prevButtonIsActive) {
+    //             this.setState({prevButtonIsActive: true})
+    //         }
+    //         if (position === this.state.correctPositions.length - 1) {
+    //             this.setState({nextButtonIsActive: false})
+    //         } else if (position !== this.state.correctPositions.length - 1 && !this.state.nextButtonIsActive) {
+    //             this.setState({nextButtonIsActive: true})
+    //         }
+    //     }
+    // }
+
+    // getLoop(newPos) {
+    //     if (this.state.loop && this.state.correctPositions.indexOf(newPos) === 0 && this.state.correctPositions.length > 1) {
+    //         flashMove(this.state.correctPositions[this.state.itemsQuantity])
+    //         this.setState({currentPos: this.state.correctPositions[this.state.itemsQuantity]})
+    //     } else if (this.state.loop && this.state.correctPositions.indexOf(newPos) === this.state.correctPositions.length - 1 && this.state.correctPositions.length > 1) {
+    //         flashMove(this.state.correctPositions[this.state.correctPositions.length - 1 - this.state.itemsQuantity])
+    //         this.setState({currentPos: this.state.correctPositions[this.state.correctPositions.length - 1 - this.state.itemsQuantity]})
+    //     } else {
+    //         this.setState({currentPos: newPos})
+    //     }
+    // }
+
+    render() {
+        return(
+            <div className='Carousel'>
+                <CarouselContent content={makeContentDOM(this.props.content, this.itemsPerView, this.loop)} 
+                                onTouchStart={this.saveTouchPoint} 
+                                onMove={this.touchMove} 
+                                onTouchEnd={this.positionCorrection}
+                                ref={this.carouselContent}
+                />
+                <CarouselButton moveTo='previous'
+                                isActive={this.state.prevButtonIsActive} 
+                                onClick={this.buttonMove}
+                />
+                <CarouselButton moveTo='next' 
+                                isActive={this.state.nextButtonIsActive}
+                                onClick={this.buttonMove}
+                />
+                <CarouselPagination onClick={this.paginationMove} 
+                                    itemsQuantity={this.itemsQuantity}
+                />
+            </div>
+        )
+    }
 }
 
 export default Carousel
