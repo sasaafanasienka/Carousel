@@ -10,7 +10,7 @@ class CarouselContent extends React.Component {
 
     render() {
         return(
-            <div ref={this.props.forwardRef} className='CarouselContent' onTouchStart={this.props.onTouchStart} onTouchMove={this.props.onMove} onTouchEnd={this.props.onTouchEnd}>
+            <div className='CarouselContent' ref={this.props.forwardRef} onTouchStart={this.props.onTouchStart} onTouchMove={this.props.onMove} onTouchEnd={this.props.onTouchEnd}>
                 {this.props.content}     
             </div>
         )

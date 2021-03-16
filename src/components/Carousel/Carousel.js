@@ -9,7 +9,7 @@ import CarouselContent from "./components/CarouselContent/CarouselContent";
 
 function Carousel(props) {
 
-    const carouselContent = createRef();
+    const carouselContent = createRef()
 
     const [wasMounted, setWasMounted] = useState(false)
     const [itemsQuantity, setItemsQuantity] = useState(props.content.length)
@@ -54,7 +54,7 @@ function Carousel(props) {
 
     function touchMove(event) {
         const offset = event.targetTouches[0].clientX - touchPoint
-        document.querySelector('.CarouselContent').style.left = `${currentPos + offset}px`
+        carouselContent.current.style.left = `${currentPos + offset}px`
     }
 
     function buttonMove(direction) {
@@ -82,7 +82,7 @@ function Carousel(props) {
     }
 
     function positionCorrection() {
-        const currentPos = Number(document.querySelector('.CarouselContent').style.left.slice(0, -2))
+        const currentPos = Number(carouselContent.current.style.left.slice(0, -2))
         let nearestCorrectPos = 0
         for (let i = 1; i < correctPositions.length; i++) {
             if (Math.abs(currentPos - correctPositions[i]) < Math.abs(currentPos - correctPositions[nearestCorrectPos])) {
@@ -125,7 +125,7 @@ function Carousel(props) {
     return(
         <div className='Carousel'>
             <CarouselContent content={makeContentDOM(props.content, itemsPerView, loop)} 
-                             onTouch={saveTouchPoint} 
+                             onTouchStart={saveTouchPoint} 
                              onMove={touchMove} 
                              onTouchEnd={positionCorrection}
                              ref={carouselContent}
