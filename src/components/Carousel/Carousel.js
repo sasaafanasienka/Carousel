@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import './Carousel.css';
 import animatedMove from "./utilits/animatedMove";
 import flashMove from "./utilits/flashMove";
@@ -8,6 +8,8 @@ import CarouselPagination from "./components/CarouselPagination/CarouselPaginati
 import CarouselContent from "./components/CarouselContent/CarouselContent";
 
 function Carousel(props) {
+
+    const carouselContent = createRef();
 
     const [wasMounted, setWasMounted] = useState(false)
     const [itemsQuantity, setItemsQuantity] = useState(props.content.length)
@@ -37,9 +39,9 @@ function Carousel(props) {
                 }
                 renderingPosition = props.loop ? correctPositions[itemsPerView] : 0
             }
-            document.querySelector('.CarouselContent').style.left = `${renderingPosition}px`
-            document.querySelector('.CarouselContent').style.gap = `0px ${gap}px`
-            document.querySelector('.CarouselContent').style.gridTemplateColumns = gridTemplate
+            carouselContent.current.style.left = `${renderingPosition}px`
+            carouselContent.current.style.gap = `0px ${gap}px`
+            carouselContent.current.style.gridTemplateColumns = gridTemplate
             savePosition(renderingPosition)
             setCorrectPositions(correctPositions)
             setWasMounted(true);
@@ -126,6 +128,7 @@ function Carousel(props) {
                              onTouch={saveTouchPoint} 
                              onMove={touchMove} 
                              onTouchEnd={positionCorrection}
+                             ref={carouselContent}
             />
             <CarouselButton moveTo='previous'
                             isActive={prevButtonIsActive} 

@@ -1,13 +1,20 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component, useState, useEffect, createRef, forwardRef } from "react";
+import { render } from "react-dom";
 import './CarouselContent.css';
 
-function CarouselContent(props) {
+class CarouselContent extends React.Component {
 
-    return(
-        <div className='CarouselContent' onTouchStart={props.onTouch} onTouchMove={props.onMove} onTouchEnd={props.onTouchEnd}>
-            {props.content}     
-        </div>
-    )
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return(
+            <div ref={this.props.forwardRef} className='CarouselContent' onTouchStart={this.props.onTouchStart} onTouchMove={this.props.onMove} onTouchEnd={this.props.onTouchEnd}>
+                {this.props.content}     
+            </div>
+        )
+    }
 }
 
-export default CarouselContent
+export default React.forwardRef((props, ref) => <CarouselContent {...props} forwardRef={ref} />)
