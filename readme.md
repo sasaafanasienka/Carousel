@@ -21,7 +21,7 @@ npm install --save-dev style-loader
         <Carousel
             content={arrayWithElems}
             gap={20}
-            itemsOnScreen={3}
+            itemsPerView={3}
             loop={true}
         />
     </div>
@@ -35,7 +35,7 @@ npm install --save-dev style-loader
 ```
 - also, you need to use some settings:
     - `gap` - gap between items (in pixels). type: number  
-    - `itemsOnScreen` - how many items you need to see per view. type: number  
+    - `itemsPerView` - how many items you need to see per view. type: number  
     - `loop` - choose `true` if you need infinite slides in your carousel. type: boolean  
 
 ## _How to check Carousel working:_
