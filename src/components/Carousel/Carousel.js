@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, createRef, Component } from "react";
 import './Carousel.css';
 import animatedMove from "./utilits/animatedMove";
-import flashMove from "./utilits/flashMove";
 import makeContentDOM from './utilits/makeContentDOM'
 import CarouselButton from "./components/CarouselButton/CarouselButton";
 import CarouselPagination from "./components/CarouselPagination/CarouselPagination";
@@ -25,7 +24,7 @@ class Carousel extends Component {
             wasMounted: false,
             currentPos: 0, //current style.left of carousel content block
             correctPositions: [], //array of correct coordinates for carousel content block
-            prevButtonIsActive: this.loop ? true : false,
+            prevButtonIsActive: this.loop && this.itemsQuantity > this.itemsPerView ? true : false,
             nextButtonIsActive: this.itemsQuantity > this.itemsPerView ? true : false,
             touchPoint: 0
         }
@@ -80,6 +79,7 @@ class Carousel extends Component {
         const newPos = this.state.correctPositions[currentIndex + direction]
         this.arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
         animatedMove(this.state.currentPos, newPos)
+        console.log(newPos)
         this.getLoop(newPos)
     }
 
@@ -112,7 +112,7 @@ class Carousel extends Component {
     }
 
     arrowButtonsManage(position) {
-        if (!this.state.loop) {
+        if (!this.loop) {
             if (position === 0) {
                 this.setState({prevButtonIsActive: false})
             } else if (position !== 0 && !this.state.prevButtonIsActive) {
@@ -127,12 +127,12 @@ class Carousel extends Component {
     }
 
     getLoop(newPos) {
-        if (this.state.loop && this.state.correctPositions.indexOf(newPos) === 0 && this.state.correctPositions.length > 1) {
-            flashMove(this.state.correctPositions[this.state.itemsQuantity])
-            this.setState({currentPos: this.state.correctPositions[this.state.itemsQuantity]})
-        } else if (this.state.loop && this.state.correctPositions.indexOf(newPos) === this.state.correctPositions.length - 1 && this.state.correctPositions.length > 1) {
-            flashMove(this.state.correctPositions[this.state.correctPositions.length - 1 - this.state.itemsQuantity])
-            this.setState({currentPos: this.state.correctPositions[this.state.correctPositions.length - 1 - this.state.itemsQuantity]})
+        if (this.loop && this.state.correctPositions.indexOf(newPos) === 0 && this.state.correctPositions.length > 1) {
+            this.carouselContent.current.style.left = this.state.correctPositions[this.itemsQuantity] //flash move to tearget point
+            this.setState({currentPos: this.state.correctPositions[this.itemsQuantity]})
+        } else if (this.loop && this.state.correctPositions.indexOf(newPos) === this.state.correctPositions.length - 1 && this.state.correctPositions.length > 1) {
+            this.carouselContent.current.style.left = this.state.correctPositions[this.state.correctPositions.length - 1 - this.itemsQuantity] //flash move to tearget point
+            this.setState({currentPos: this.state.correctPositions[this.state.correctPositions.length - 1 - this.itemsQuantity]})
         } else {
             this.setState({currentPos: newPos})
         }
