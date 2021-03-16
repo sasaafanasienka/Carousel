@@ -13,6 +13,7 @@ class Carousel extends Component {
         super(props)
 
         this.carouselContent = createRef()
+        this.carousel = createRef()
 
         this.itemsQuantity = this.props.content.length
         this.itemsPerView = this.props.itemsPerView ? this.props.itemsPerView : 1
@@ -40,7 +41,7 @@ class Carousel extends Component {
 
     componentDidMount() {
         if (!this.state.wasMounted) {
-            const carouselWidth = document.querySelector('.Carousel').clientWidth
+            const carouselWidth = this.carousel.current.clientWidth
             const itemWidth = (carouselWidth - (this.gap * (this.itemsPerView - 1))) / this.itemsPerView
             const gridTemplate = `repeat(${this.DOMItemsQuantity}, ${itemWidth}px)`
             let correctPositions = [0]
@@ -79,7 +80,6 @@ class Carousel extends Component {
         const newPos = this.state.correctPositions[currentIndex + direction]
         this.arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
         animatedMove(this.state.currentPos, newPos)
-        console.log(newPos)
         this.getLoop(newPos)
     }
 
@@ -140,7 +140,7 @@ class Carousel extends Component {
 
     render() {
         return(
-            <div className='Carousel'>
+            <div className='Carousel' ref={this.carousel}>
                 <CarouselContent content={makeContentDOM(this.props.content, this.itemsPerView, this.loop)} 
                                 onTouchStart={this.saveTouchPoint} 
                                 onMove={this.touchMove} 
