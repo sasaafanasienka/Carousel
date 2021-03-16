@@ -25,8 +25,8 @@ class Carousel extends Component {
             wasMounted: false,
             currentPos: 0, //current style.left of carousel content block
             correctPositions: [], //array of correct coordinates for carousel content block
-            prevButtonIsActive: this.loop && this.itemsQuantity > this.itemsPerView ? true : false,
-            nextButtonIsActive: this.itemsQuantity > this.itemsPerView ? true : false,
+            prevButtonIsActive: this.loop && this.itemsQuantity > this.itemsPerView,
+            nextButtonIsActive: this.itemsQuantity > this.itemsPerView,
             touchPoint: 0
         }
 
@@ -66,13 +66,28 @@ class Carousel extends Component {
         }
     }
 
-    saveTouchPoint(event) {
-        this.setState({touchPoint: event.targetTouches[0].clientX})
+    saveTouchPoint(touchPoint) {
+        this.setState({touchPoint: touchPoint})
+    }
+    
+    touchMove(movingPoint) {
+        const offset = movingPoint - this.state.touchPoint
+        this.carouselContent.current.style.left = `${this.state.currentPos + offset}px`
+        // console.log(this.carouselContent.current.style.left)
     }
 
-    touchMove(event) {
-        const offset = event.targetTouches[0].clientX - this.state.touchPoint
-        this.carouselContent.current.style.left = `${this.state.currentPos + offset}px`
+    positionCorrection(endPoint) {
+        const currentPos = this.state.currentPos - this.state.touchPoint + endPoint
+        let nearestCorrectPos = 0
+        for (let i = 1; i < this.state.correctPositions.length; i++) {
+            if (Math.abs(currentPos - this.state.correctPositions[i]) < Math.abs(currentPos - this.state.correctPositions[nearestCorrectPos])) {
+                nearestCorrectPos = i
+            }
+        }
+        let newPos = this.state.correctPositions[nearestCorrectPos]
+        this.arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
+        animatedMove(currentPos, newPos)
+        this.getLoop(newPos)
     }
 
     buttonMove(direction) {
@@ -95,20 +110,6 @@ class Carousel extends Component {
             animatedMove(this.state.currentPos, newPos)
             this.setState({currentPos: newPos})
         }
-    }
-
-    positionCorrection() {
-        const currentPos = Number(this.carouselContent.current.style.left.slice(0, -2))
-        let nearestCorrectPos = 0
-        for (let i = 1; i < this.state.correctPositions.length; i++) {
-            if (Math.abs(currentPos - this.state.correctPositions[i]) < Math.abs(currentPos - this.state.correctPositions[nearestCorrectPos])) {
-                nearestCorrectPos = i
-            }
-        }
-        let newPos = this.state.correctPositions[nearestCorrectPos]
-        this.arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
-        animatedMove(currentPos, newPos)
-        this.getLoop(newPos)
     }
 
     arrowButtonsManage(position) {
