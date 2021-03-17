@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect, createRef, forwardRef } from "react";
+import React from "react";
 import { render } from "react-dom";
 import './CarouselContent.css';
 
@@ -6,54 +6,52 @@ class CarouselContent extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            dragImg: null
-        }
-        this.onTouchStart = this.onTouchStart.bind(this)
+
+        this.mouseEvents = ['mousedown','mousemove','mouseup']
+        this.touchEvents = ['touchstart','touchmove','touchend']
+        this.getClientX = this.getClientX.bind(this)
+        this.onMoveStart = this.onMoveStart.bind(this)
         this.onMove = this.onMove.bind(this)
-        this.onTouchEnd = this.onTouchEnd.bind(this)
-        this.getCorrectClientX = this.getCorrectClientX.bind(this)
+        this.onMoveEnd = this.onMoveEnd.bind(this)
     }
 
-    componentDidMount() {
-        this.setState({ dragImg: document.querySelector('.CarouselContent__drag-image') });
-    }
-
-    getCorrectClientX(event) {
-        const dragEvents = ['dragstart','drag','dragend']
-        const touchEvents = ['touchstart','touchmove','touchend']
-        if (dragEvents.includes(event.type)) {
+    getClientX(event) {
+        if (this.mouseEvents.includes(event.type)) {
             return event.clientX
-        } else if (touchEvents.includes(event.type)) {
+        } else if (this.touchEvents.includes(event.type)) {
             return event.changedTouches[0].clientX
         }
     }
 
-    onTouchStart(event) {
-        this.props.onTouchStart(this.getCorrectClientX(event))
+    onMoveStart(event) {
+        if (this.mouseEvents.includes(event.type)) {
+            event.preventDefault()
+            document.addEventListener('mousemove', this.onMove)
+            document.addEventListener('mouseup', this.onMoveEnd)
+        }
+        this.props.onTouchStart(this.getClientX(event))
     }
 
     onMove(event) {
-        console.log(this.state.dragImg)
-        event.dataTransfer.setDragImage(this.state.dragImg, 0, 0)
-        this.props.onMove(this.getCorrectClientX(event))
+        this.props.onMove(this.getClientX(event))
     }
 
-    onTouchEnd(event) {
-        this.props.onTouchEnd(this.getCorrectClientX(event))
+    onMoveEnd(event) {
+        if (this.mouseEvents.includes(event.type)) {
+            document.removeEventListener('mousemove', this.onMove)
+            document.removeEventListener('mouseup', this.onMoveEnd)
+        }
+        this.props.onTouchEnd(this.getClientX(event))
     }
 
     render() {
         return(
             <div className='CarouselContent' 
                 ref={this.props.forwardRef} 
-                draggable={true}
-                onDragStart={this.onTouchStart}
-                onDrag={this.onMove}
-                onDragEnd={this.onTouchEnd}
-                onTouchStart={this.onTouchStart} 
+                onMouseDown={this.onMoveStart}
+                onTouchStart={this.onMoveStart} 
                 onTouchMove={this.onMove} 
-                onTouchEnd={this.onTouchEnd}
+                onTouchEnd={this.onMoveEnd}
             >
                 {this.props.content}
                 <img className='CarouselContent__drag-image'></img>     
