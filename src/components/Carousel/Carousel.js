@@ -19,7 +19,8 @@ class Carousel extends Component {
         this.itemsPerView = this.props.itemsPerView ? this.props.itemsPerView : 1
         this.gap = this.props.gap !== undefined ? this.props.gap : 10
         this.loop = this.props.loop ? this.props.loop : false
-        this.DOMItemsQuantity = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsQuantity + 2 * this.itemsPerView : this.itemsQuantity // if (loop) we need to duplicate some items
+        this.DOMItemsQuantity = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsQuantity + 2 * this.itemsPerView : this.itemsQuantity 
+        // if (loop) we need to duplicate some items
 
         this.state ={
             wasMounted: false,
@@ -44,15 +45,16 @@ class Carousel extends Component {
             const carouselWidth = this.carousel.current.clientWidth
             const itemWidth = (carouselWidth - (this.gap * (this.itemsPerView - 1))) / this.itemsPerView
             const gridTemplate = `repeat(${this.DOMItemsQuantity}, ${itemWidth}px)`
-            let correctPositions = [0]
+            let correctPositions = Array(this.DOMItemsQuantity - this.itemsPerView + 1).fill(0)
             let renderingPosition = 0
             if (this.itemsQuantity <= this.itemsPerView) {
                 renderingPosition = (carouselWidth - (itemWidth * this.itemsQuantity + this.gap * (this.itemsQuantity - 1))) / 2
-                correctPositions = [renderingPosition] //if there items per view more than items quantity we have only one right position in the center of view
+                correctPositions = [renderingPosition] //if there items per view more than items quantity we have only one correct position in the center of view
             } else {
-                for (let i = 1; i <= this.DOMItemsQuantity - this.itemsPerView; i++) {
-                    correctPositions.push(-i * (itemWidth + this.gap))
-                }
+                correctPositions = correctPositions.reduce((resultArr, currentValue, index) => {
+                    resultArr.push(index * (itemWidth + this.gap) * -1)
+                    return resultArr
+                }, [])
                 renderingPosition = this.loop ? correctPositions[this.itemsPerView] : 0
             }
             this.carouselContent.current.style.left = `${renderingPosition}px`
@@ -76,15 +78,16 @@ class Carousel extends Component {
         // console.log(this.carouselContent.current.style.left)
     }
 
-    positionCorrection(endPoint) {
-        const currentPos = this.state.currentPos - this.state.touchPoint + endPoint
-        let nearestCorrectPos = 0
-        for (let i = 1; i < this.state.correctPositions.length; i++) {
-            if (Math.abs(currentPos - this.state.correctPositions[i]) < Math.abs(currentPos - this.state.correctPositions[nearestCorrectPos])) {
-                nearestCorrectPos = i
-            }
-        }
-        let newPos = this.state.correctPositions[nearestCorrectPos]
+    positionCorrection(mouseUpPos) {
+        const currentPos = this.state.currentPos - this.state.touchPoint + mouseUpPos
+        const offsets = this.state.correctPositions.map((elem) => {
+            return Math.abs(currentPos - elem)
+        })
+        const minOffset = offsets.reduce((previousValue, currentValue) => {
+            return currentValue < previousValue ? currentValue : previousValue
+        })
+        const nearestCorrectPos = offsets.indexOf(minOffset)
+        const newPos = this.state.correctPositions[nearestCorrectPos]
         this.arrowButtonsManage(this.state.correctPositions.indexOf(newPos))
         animatedMove(currentPos, newPos)
         this.getLoop(newPos)
@@ -100,7 +103,7 @@ class Carousel extends Component {
 
     paginationMove(id) {
         //if (loop) we have additional carousel items in DOM
-        let loopCorrection = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsPerView : 0
+        const loopCorrection = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsPerView : 0
         let newPos = this.state.correctPositions[id + loopCorrection]
         if (newPos === undefined) { //this can happen if you go to the last item of carousel and loop is unactive
             newPos = this.state.correctPositions[this.itemsQuantity - this.itemsPerView] //it wiil be move on nearest correct position 
@@ -143,9 +146,9 @@ class Carousel extends Component {
         return(
             <div className='Carousel' ref={this.carousel}>
                 <CarouselContent content={makeContentDOM(this.props.content, this.itemsPerView, this.loop)} 
-                                onTouchStart={this.saveTouchPoint} 
+                                onMoveStart={this.saveTouchPoint} 
                                 onMove={this.touchMove} 
-                                onTouchEnd={this.positionCorrection}
+                                onMoveEnd={this.positionCorrection}
                                 ref={this.carouselContent}
                 />
                 <CarouselButton moveTo='previous'

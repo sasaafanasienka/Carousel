@@ -1,11 +1,11 @@
 function animatedMove(startPoint, endPoint) {
 
-    const framesNum = 15
+    const framesNum = 15 //config the number of animation frames
     let currentFrame = 0
 
     function animationStep(currentframe, framesNum, startPoint, endPoint) {
         const moveDistance = endPoint - startPoint
-        const animationFunction = (Math.sin((Math.PI / 2) * -1 + Math.PI * currentframe / (framesNum - 1)) + 1) / 2 //синусоида от 0 до 1
+        const animationFunction = (Math.sin((Math.PI / 2) * -1 + Math.PI * currentframe / (framesNum - 1)) + 1) / 2 //sine function from 0 to 1
         document.querySelector('.CarouselContent').style.left = `${startPoint + moveDistance * animationFunction}px`
     }
   

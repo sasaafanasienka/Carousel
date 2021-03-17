@@ -20,10 +20,14 @@ function App() {
     }
 
     const config = {
-        content: getRandom(3,10),
-        gap: getRandom(0,4) * 5,
-        itemsPerView: getRandom(3,5),
-        loop: getRandom(0,1) === 0 ? true : false
+        content: 10,
+        gap: 10,
+        itemsPerView: 3,
+        loop: true
+        // content: getRandom(3,10),
+        // gap: getRandom(0,4) * 5,
+        // itemsPerView: getRandom(3,5),
+        // loop: getRandom(0,1) === 0 ? true : false
     }
 
     return (

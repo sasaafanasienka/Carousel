@@ -29,7 +29,7 @@ class CarouselContent extends React.Component {
             document.addEventListener('mousemove', this.onMove)
             document.addEventListener('mouseup', this.onMoveEnd)
         }
-        this.props.onTouchStart(this.getClientX(event))
+        this.props.onMoveStart(this.getClientX(event))
     }
 
     onMove(event) {
@@ -41,7 +41,7 @@ class CarouselContent extends React.Component {
             document.removeEventListener('mousemove', this.onMove)
             document.removeEventListener('mouseup', this.onMoveEnd)
         }
-        this.props.onTouchEnd(this.getClientX(event))
+        this.props.onMoveEnd(this.getClientX(event))
     }
 
     render() {
