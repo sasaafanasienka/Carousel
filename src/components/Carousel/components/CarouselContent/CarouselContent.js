@@ -53,8 +53,7 @@ class CarouselContent extends React.Component {
                 onTouchMove={this.onMove} 
                 onTouchEnd={this.onMoveEnd}
             >
-                {this.props.content}
-                <img className='CarouselContent__drag-image'></img>     
+                {this.props.children}
             </div>
         )
     }

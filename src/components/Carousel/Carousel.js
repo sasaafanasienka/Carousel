@@ -15,7 +15,7 @@ class Carousel extends Component {
         this.carouselContent = createRef()
         this.carousel = createRef()
 
-        this.itemsQuantity = this.props.content.length
+        this.itemsQuantity = this.props.children.length
         this.itemsPerView = this.props.itemsPerView ? this.props.itemsPerView : 1
         this.gap = this.props.gap !== undefined ? this.props.gap : 10
         this.loop = this.props.loop ? this.props.loop : false
@@ -145,12 +145,13 @@ class Carousel extends Component {
     render() {
         return(
             <div className='Carousel' ref={this.carousel}>
-                <CarouselContent content={makeContentDOM(this.props.content, this.itemsPerView, this.loop)} 
-                                onMoveStart={this.saveTouchPoint} 
+                <CarouselContent onMoveStart={this.saveTouchPoint} 
                                 onMove={this.touchMove} 
                                 onMoveEnd={this.positionCorrection}
                                 ref={this.carouselContent}
-                />
+                >
+                    {makeContentDOM(this.props.children, this.itemsPerView, this.loop)}  
+                </CarouselContent>
                 <CarouselButton moveTo='previous'
                                 isActive={this.state.prevButtonIsActive} 
                                 onClick={this.buttonMove}

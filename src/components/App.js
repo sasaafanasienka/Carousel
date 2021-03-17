@@ -20,14 +20,10 @@ function App() {
     }
 
     const config = {
-        content: 10,
-        gap: 10,
-        itemsPerView: 3,
-        loop: true
-        // content: getRandom(3,10),
-        // gap: getRandom(0,4) * 5,
-        // itemsPerView: getRandom(3,5),
-        // loop: getRandom(0,1) === 0 ? true : false
+        content: getRandom(3,10),
+        gap: getRandom(0,4) * 5,
+        itemsPerView: getRandom(3,5),
+        loop: getRandom(0,1) === 0 ? true : false
     }
 
     return (
@@ -38,11 +34,12 @@ function App() {
             <h1 className='text'>Loop: {config.loop.toString()}</h1>
             <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>
             <Carousel
-                content={makeContentArr(config.content)}
                 gap={config.gap}
                 itemsPerView={config.itemsPerView}
                 loop={config.loop}
-            />
+            >
+                {makeContentArr(config.content)}
+            </Carousel>
         </div>
     );
 }
