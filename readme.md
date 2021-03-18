@@ -19,18 +19,19 @@ npm install --save-dev style-loader
 ```sh
     <div className='App'>
         <Carousel
-            content={arrayWithElems}
             gap={20}
             itemsPerView={3}
             loop={true}
-        />
+        >
+            {content}
+        </Carousel>
     </div>
 ```
-- as content you need to use the array with any html elements. For example:
+- as content you need to use the array with any html elements and unique "key" prop. For example:
 ```sh
     [
-        <div className='anyClassName'>Content 1</div>,
-        <div className='anyClassName'>Content 2</div>,
+        <div key='1' className='anyClassName'>Content 1</div>,
+        <div key='2' className='anyClassName'>Content 2</div>,
     ]
 ```
 - also, you need to use some settings:
