@@ -20,7 +20,8 @@ function App() {
         content: getRandom(3,10),
         gap: getRandom(0,4) * 5,
         itemsPerView: getRandom(3,5),
-        loop: getRandom(0,1) === 0 ? true : false
+        loop: getRandom(0,1) === 0 ? true : false,
+        buttonSize: getRandom(4,10) * 5
     }
 
     return (
@@ -29,11 +30,13 @@ function App() {
             <h1 className='text'>Gap: {randomConfig.gap}px</h1>
             <h1 className='text'>Items per view: {randomConfig.itemsPerView}</h1>
             <h1 className='text'>Loop: {randomConfig.loop.toString()}</h1>
+            <h1 className='text'>Button size: {randomConfig.buttonSize}px</h1>
             <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>
             <Carousel
                 gap={randomConfig.gap}
                 itemsPerView={randomConfig.itemsPerView}
                 loop={randomConfig.loop}
+                buttonSize={randomConfig.buttonSize}
             >
                 {makeContentArr(randomConfig.content)}
             </Carousel>

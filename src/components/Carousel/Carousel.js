@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, createRef, Component } from "react";
+import React, { createRef, Component } from "react";
 import './Carousel.css';
 import animatedMove from "./utilits/animatedMove";
 import makeContentDOM from './utilits/makeContentDOM'
@@ -144,24 +144,28 @@ class Carousel extends Component {
 
     render() {
         return(
-            <div className='Carousel' ref={this.carousel}>
-                <CarouselContent onMoveStart={this.saveTouchPoint} 
-                                onMove={this.touchMove} 
-                                onMoveEnd={this.positionCorrection}
-                                ref={this.carouselContent}
-                >
-                    {makeContentDOM(this.props.children, this.itemsPerView, this.loop)}  
-                </CarouselContent>
+            <div className='Carousel__container'>
+                <div className='Carousel' ref={this.carousel}>
+                    <CarouselContent onMoveStart={this.saveTouchPoint} 
+                                    onMove={this.touchMove} 
+                                    onMoveEnd={this.positionCorrection}
+                                    ref={this.carouselContent}
+                    >
+                        {makeContentDOM(this.props.children, this.itemsPerView, this.loop)}  
+                    </CarouselContent>
+                    <CarouselPagination onClick={this.paginationMove} 
+                                        itemsQuantity={this.itemsQuantity}
+                    />
+                </div>
                 <CarouselButton moveTo='previous'
                                 isActive={this.state.prevButtonIsActive} 
                                 onClick={this.buttonMove}
+                                size={this.props.buttonSize}
                 />
                 <CarouselButton moveTo='next' 
                                 isActive={this.state.nextButtonIsActive}
                                 onClick={this.buttonMove}
-                />
-                <CarouselPagination onClick={this.paginationMove} 
-                                    itemsQuantity={this.itemsQuantity}
+                                size={this.props.buttonSize}
                 />
             </div>
         )
