@@ -45,7 +45,7 @@ class Carousel extends Component {
             const itemWidth = (carouselWidth - (this.gap * (this.itemsPerView - 1))) / this.itemsPerView
             const gridTemplate = `repeat(${this.DOMItemsQuantity}, ${itemWidth}px)`
             const correctPositions = (this.itemsQuantity <= this.itemsPerView) ?
-                (carouselWidth - (itemWidth * this.itemsQuantity + this.gap * (this.itemsQuantity - 1))) / 2 :
+                [(carouselWidth - (itemWidth * this.itemsQuantity + this.gap * (this.itemsQuantity - 1))) / 2] :
                 Array(this.DOMItemsQuantity - this.itemsPerView + 1).fill(0).reduce((resultArr, currentValue, index) => {
                     resultArr.push(index * (itemWidth + this.gap) * -1)
                     return resultArr
@@ -98,6 +98,7 @@ class Carousel extends Component {
     }
 
     paginationMove(id) {
+        console.log(this.state.correctPositions)
         //if (loop) we have additional carousel items in DOM
         const loopCorrection = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsPerView : 0
         let newPos = this.state.correctPositions[id + loopCorrection]
