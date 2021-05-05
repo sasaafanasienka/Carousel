@@ -1,5 +1,6 @@
 import React from "react";
 import rightArrow from '../../images/right_arrow.svg'
+import leftArrow from '../../images/left_arrow.svg'
 import './CarouselButton.css';
 
 function CarouselButton(props) {
@@ -20,13 +21,12 @@ function CarouselButton(props) {
         buttonClassName = buttonClassName.concat(` CarouselButton_unactive`)
     }
 
-    // const content = props.moveTo === 'previous' ? leftArrow : rightArrow
+    const content = props.moveTo === 'previous' ? leftArrow : rightArrow
     const handler = props.isActive ? move : null
 
     return(
         <button className={buttonClassName} onClick={handler} style={style}>
-        A
-            {/* <img src={content} alt={`${props.moveTo} button`}/>  */}
+            <img src={content} alt={`${props.moveTo} button`}/> 
         </button>
     )
 }
