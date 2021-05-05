@@ -1,6 +1,5 @@
 import React from "react";
-// import rightArrow from '../../images/right_arrow.svg'
-// import leftArrow from '../../images/left_arrow.svg'
+import rightArrow from '../../images/right_arrow.svg'
 import './CarouselButton.css';
 
 function CarouselButton(props) {
