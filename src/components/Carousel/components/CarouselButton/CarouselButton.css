@@ -11,14 +11,6 @@
     transition: opacity .3s linear;
 }
 
-.CarouselButton_previous {
-    left: 10px;
-}
-
-.CarouselButton_next {
-    right: 10px;
-}
-
 .CarouselButton_unactive {
     opacity: .3;
     transition: opacity .3s linear;

@@ -9,6 +9,8 @@ function CarouselButton(props) {
         'width': `${props.size}px`,
         'height': `${props.size}px`,
         'top': `calc((100% - 60px) / 2 - ${props.size / 2}px)`,
+        'left': `${props.moveTo === 'previous' ? props.position : 'auto'}px`,
+        'right': `${props.moveTo === 'next' ? props.position : 'auto'}px`
     }
 
     function move() {
@@ -16,7 +18,7 @@ function CarouselButton(props) {
         props.onClick(direction)
     }
 
-    let buttonClassName = `CarouselButton CarouselButton_${props.moveTo}`
+    let buttonClassName = `CarouselButton`
     if (!props.isActive) {
         buttonClassName = buttonClassName.concat(` CarouselButton_unactive`)
     }

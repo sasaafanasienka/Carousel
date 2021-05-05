@@ -161,11 +161,13 @@ class Carousel extends Component {
                                 isActive={this.state.prevButtonIsActive} 
                                 onClick={this.buttonMove}
                                 size={this.props.buttonSize}
+                                position={this.props.buttonPos}
                 />
                 <CarouselButton moveTo='next' 
                                 isActive={this.state.nextButtonIsActive}
                                 onClick={this.buttonMove}
                                 size={this.props.buttonSize}
+                                position={this.props.buttonPos}
                 />
             </div>
         )
