@@ -5,7 +5,6 @@ import makeContentDOM from './utilits/makeContentDOM'
 import CarouselButton from "./components/CarouselButton/CarouselButton";
 import CarouselPagination from "./components/CarouselPagination/CarouselPagination";
 import CarouselContent from "./components/CarouselContent/CarouselContent";
-import { render } from "react-dom";
 
 class Carousel extends Component {
 
@@ -45,18 +44,15 @@ class Carousel extends Component {
             const carouselWidth = this.carousel.current.clientWidth
             const itemWidth = (carouselWidth - (this.gap * (this.itemsPerView - 1))) / this.itemsPerView
             const gridTemplate = `repeat(${this.DOMItemsQuantity}, ${itemWidth}px)`
-            let correctPositions = Array(this.DOMItemsQuantity - this.itemsPerView + 1).fill(0)
-            let renderingPosition = 0
-            if (this.itemsQuantity <= this.itemsPerView) {
-                renderingPosition = (carouselWidth - (itemWidth * this.itemsQuantity + this.gap * (this.itemsQuantity - 1))) / 2
-                correctPositions = [renderingPosition] //if there items per view more than items quantity we have only one correct position in the center of view
-            } else {
-                correctPositions = correctPositions.reduce((resultArr, currentValue, index) => {
+            const correctPositions = (this.itemsQuantity <= this.itemsPerView) ?
+                (carouselWidth - (itemWidth * this.itemsQuantity + this.gap * (this.itemsQuantity - 1))) / 2 :
+                Array(this.DOMItemsQuantity - this.itemsPerView + 1).fill(0).reduce((resultArr, currentValue, index) => {
                     resultArr.push(index * (itemWidth + this.gap) * -1)
                     return resultArr
                 }, [])
-                renderingPosition = this.loop ? correctPositions[this.itemsPerView] : 0
-            }
+            const renderingPosition = (this.itemsQuantity <= this.itemsPerView) ?
+                (carouselWidth - (itemWidth * this.itemsQuantity + this.gap * (this.itemsQuantity - 1))) / 2 :
+                (this.loop) ? correctPositions[this.itemsPerView] : 0
             this.carouselContent.current.style.left = `${renderingPosition}px`
             this.carouselContent.current.style.gap = `0px ${this.gap}px`
             this.carouselContent.current.style.gridTemplateColumns = gridTemplate

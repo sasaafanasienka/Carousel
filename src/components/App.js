@@ -17,7 +17,7 @@ function App() {
     }
 
     const randomConfig = {
-        content: getRandom(3,10),
+        content: getRandom(1,10),
         gap: getRandom(0,4) * 5,
         itemsPerView: getRandom(3,5),
         loop: getRandom(0,1) === 0 ? true : false,
