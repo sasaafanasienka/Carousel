@@ -69,6 +69,7 @@ class Carousel extends Component {
     }
     
     touchMove(movingPoint) {
+        // console.log(event)
         const offset = movingPoint - this.state.touchPoint
         this.carouselContent.current.style.left = `${this.state.currentPos + offset}px`
         // console.log(this.carouselContent.current.style.left)
@@ -98,7 +99,6 @@ class Carousel extends Component {
     }
 
     paginationMove(id) {
-        console.log(this.state.correctPositions)
         //if (loop) we have additional carousel items in DOM
         const loopCorrection = this.loop && this.itemsQuantity > this.itemsPerView ? this.itemsPerView : 0
         let newPos = this.state.correctPositions[id + loopCorrection]

@@ -1,4 +1,5 @@
 import React from "react";
+import { version } from "react-dom";
 import { render } from "react-dom";
 import './CarouselContent.css';
 
@@ -7,19 +8,24 @@ class CarouselContent extends React.Component {
     constructor(props) {
         super(props)
 
+        this.state = {
+            startPoint: [],
+            direction: null
+        }
+
         this.mouseEvents = ['mousedown','mousemove','mouseup']
         this.touchEvents = ['touchstart','touchmove','touchend']
-        this.getClientX = this.getClientX.bind(this)
+        this.getClientCoords = this.getClientCoords.bind(this)
         this.onMoveStart = this.onMoveStart.bind(this)
         this.onMove = this.onMove.bind(this)
         this.onMoveEnd = this.onMoveEnd.bind(this)
     }
 
-    getClientX(event) {
+    getClientCoords(event) {
         if (this.mouseEvents.includes(event.type)) {
-            return event.clientX
+            return [event.clientX, event.clientY]
         } else if (this.touchEvents.includes(event.type)) {
-            return event.changedTouches[0].clientX
+            return [event.changedTouches[0].clientX, event.changedTouches[0].clientY]
         }
     }
 
@@ -29,11 +35,20 @@ class CarouselContent extends React.Component {
             document.addEventListener('mousemove', this.onMove)
             document.addEventListener('mouseup', this.onMoveEnd)
         }
-        this.props.onMoveStart(this.getClientX(event))
+        const startPoint = this.getClientCoords(event)
+        this.setState({startPoint: startPoint})
+        this.props.onMoveStart(startPoint[0])
     }
 
     onMove(event) {
-        this.props.onMove(this.getClientX(event))
+        if (!this.state.direction) {
+            const movePoint = this.getClientCoords(event)
+            const offsetX = Math.abs(movePoint[0] - this.state.startPoint[0])
+            const offsetY = Math.abs(movePoint[1] - this.state.startPoint[1])
+            this.setState({direction: `${offsetX >= offsetY ? 'horizontal' : 'vertical'}`})
+        } else if (this.state.direction === 'horizontal') {
+            this.props.onMove(this.getClientCoords(event)[0])
+        }
     }
 
     onMoveEnd(event) {
@@ -41,7 +56,10 @@ class CarouselContent extends React.Component {
             document.removeEventListener('mousemove', this.onMove)
             document.removeEventListener('mouseup', this.onMoveEnd)
         }
-        this.props.onMoveEnd(this.getClientX(event))
+        if (this.state.direction === 'horizontal') {
+            this.props.onMoveEnd(this.getClientCoords(event)[0])
+        }
+        this.setState({direction: null})
     }
 
     render() {
