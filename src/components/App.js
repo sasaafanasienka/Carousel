@@ -22,7 +22,7 @@ function App() {
         itemsPerView: getRandom(3,5),
         loop: getRandom(0,1) === 0 ? true : false,
         buttonSize: getRandom(4,10) * 5,
-        buttonPos: getRandom(0,1) === 0 ? 10 : -40
+        buttonPos: getRandom(0,1) === 0 ? 10 : 0
     }
 
     return (
@@ -32,9 +32,8 @@ function App() {
             <h1 className='text'>Items per view: {randomConfig.itemsPerView}</h1>
             <h1 className='text'>Loop: {randomConfig.loop.toString()}</h1>
             <h1 className='text'>Buttons size: {randomConfig.buttonSize}px</h1>
-            <h1 className='text'>Buttons position: {randomConfig.buttonPos > 0 ? 'in' : 'out'}</h1>
             <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>
-            {/* <Carousel
+            <Carousel
                 gap={randomConfig.gap}
                 itemsPerView={randomConfig.itemsPerView}
                 loop={randomConfig.loop}
@@ -42,41 +41,7 @@ function App() {
                 buttonPos={randomConfig.buttonPos}
             >
                 {makeContentArr(randomConfig.content)}
-            </Carousel> */}
-            <Carousel
-                gap={20}
-                itemsPerView={3}
-                loop={true}
-                buttonSize={30}
-                buttonPos={-30}
-            >
-                {makeContentArr(10)}
             </Carousel>
-            <h1 className='text'>Number of items: {randomConfig.content}</h1>
-            <h1 className='text'>Gap: {randomConfig.gap}px</h1>
-            <h1 className='text'>Items per view: {randomConfig.itemsPerView}</h1>
-            <h1 className='text'>Loop: {randomConfig.loop.toString()}</h1>
-            <h1 className='text'>Buttons size: {randomConfig.buttonSize}px</h1>
-            <h1 className='text'>Buttons position: {randomConfig.buttonPos > 0 ? 'in' : 'out'}</h1>
-            <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>            <h1 className='text'>Number of items: {randomConfig.content}</h1>
-            <h1 className='text'>Gap: {randomConfig.gap}px</h1>
-            <h1 className='text'>Items per view: {randomConfig.itemsPerView}</h1>
-            <h1 className='text'>Loop: {randomConfig.loop.toString()}</h1>
-            <h1 className='text'>Buttons size: {randomConfig.buttonSize}px</h1>
-            <h1 className='text'>Buttons position: {randomConfig.buttonPos > 0 ? 'in' : 'out'}</h1>
-            <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>            <h1 className='text'>Number of items: {randomConfig.content}</h1>
-            <h1 className='text'>Gap: {randomConfig.gap}px</h1>
-            <h1 className='text'>Items per view: {randomConfig.itemsPerView}</h1>
-            <h1 className='text'>Loop: {randomConfig.loop.toString()}</h1>
-            <h1 className='text'>Buttons size: {randomConfig.buttonSize}px</h1>
-            <h1 className='text'>Buttons position: {randomConfig.buttonPos > 0 ? 'in' : 'out'}</h1>
-            <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>            <h1 className='text'>Number of items: {randomConfig.content}</h1>
-            <h1 className='text'>Gap: {randomConfig.gap}px</h1>
-            <h1 className='text'>Items per view: {randomConfig.itemsPerView}</h1>
-            <h1 className='text'>Loop: {randomConfig.loop.toString()}</h1>
-            <h1 className='text'>Buttons size: {randomConfig.buttonSize}px</h1>
-            <h1 className='text'>Buttons position: {randomConfig.buttonPos > 0 ? 'in' : 'out'}</h1>
-            <h1 className='text'>Current settings was generated randomly. If you need to check how it works with other settings just refresh the page</h1>
         </div>
     );
 }

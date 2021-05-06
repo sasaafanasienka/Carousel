@@ -10,7 +10,8 @@ class CarouselContent extends React.Component {
 
         this.state = {
             startPoint: [],
-            direction: null
+            direction: null,
+            startTime: null,
         }
 
         this.mouseEvents = ['mousedown','mousemove','mouseup']
@@ -36,7 +37,7 @@ class CarouselContent extends React.Component {
             document.addEventListener('mouseup', this.onMoveEnd)
         }
         const startPoint = this.getClientCoords(event)
-        this.setState({startPoint: startPoint})
+        this.setState({startPoint: startPoint, startTime: Date.now()})
         this.props.onMoveStart(startPoint[0])
     }
 
@@ -45,8 +46,8 @@ class CarouselContent extends React.Component {
             const movePoint = this.getClientCoords(event)
             const offsetX = Math.abs(movePoint[0] - this.state.startPoint[0])
             const offsetY = Math.abs(movePoint[1] - this.state.startPoint[1])
-            this.setState({direction: `${offsetX >= offsetY ? 'horizontal' : 'vertical'}`})
-        } else if (this.state.direction === 'horizontal') {
+            this.setState({direction: `${(offsetX < offsetY) ? 'vertical' : `${(movePoint[0] - this.state.startPoint[0]) > 0 ? 'right' : 'left'}`}`})
+        } else if (this.state.direction === 'left' || this.state.direction === 'right') {
             this.props.onMove(this.getClientCoords(event)[0])
         }
     }
@@ -56,8 +57,13 @@ class CarouselContent extends React.Component {
             document.removeEventListener('mousemove', this.onMove)
             document.removeEventListener('mouseup', this.onMoveEnd)
         }
-        if (this.state.direction === 'horizontal') {
-            this.props.onMoveEnd(this.getClientCoords(event)[0])
+        if (['right', 'left'].includes(this.state.direction)) {
+            const fastSwipe = Date.now() - this.state.startTime < 150
+            if (fastSwipe) {
+                this.props.onFastSwipeEnd(this.getClientCoords(event)[0], this.state.direction)
+            } else {
+                this.props.onMoveEnd(this.getClientCoords(event)[0])
+            }         
         }
         this.setState({direction: null})
     }

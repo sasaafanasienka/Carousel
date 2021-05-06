@@ -1,8 +1,18 @@
 # Carousel
 
-It's my training project to learn react
-version: 1.1 
+It's my own re-used carousel component
+
+- It Works for mobile and desktop devices
+- Supports swipes
+- Works with any HTML content
+- Animated
+- Supports multiple slides on the screen
+- Supports infinite option
+- Supports scrolling to a selected slide (like go to slide X)
+
+version: 1.2 changes:
 - added customizing options for arrow buttons
+- improved swipe function
 
 ## _How to use it in your project with React:_
 
