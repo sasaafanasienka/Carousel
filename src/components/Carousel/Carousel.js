@@ -93,8 +93,8 @@ class Carousel extends Component {
         const currentPos = this.state.currentPos - this.state.touchPoint + mouseUpPos
         const oldIndex = this.state.correctPositions.indexOf(this.state.currentPos)
         const directionCorrection = (direction === 'left') ? 1 : -1        
-        let newPos = this.state.correctPositions[oldIndex + directionCorrection] 
-        if (!newPos) {
+        let newPos = this.state.correctPositions[oldIndex + directionCorrection]
+        if (newPos === undefined) {
             newPos = this.state.currentPos
             animatedMove(currentPos, newPos)
         } else {
